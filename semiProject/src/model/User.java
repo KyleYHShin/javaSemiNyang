@@ -1,5 +1,7 @@
 package model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class User {
@@ -8,8 +10,7 @@ public class User {
 	private String nickName;
 	private int score;
 	
-	public User() {
-		// TODO Auto-generated constructor stub
+	public User() {		
 	}
 
 	public User(GregorianCalendar date, String nickName, int score) {
@@ -17,12 +18,13 @@ public class User {
 		this.date = date;
 		this.nickName = nickName;
 		this.score = score;
-	}
-	
+	}	
 
 	@Override
 	public String toString() {
-		return date + "," + nickName + "," + score;
+		SimpleDateFormat myFormat = new SimpleDateFormat("yy:MM:dd-hh:mm:ss");
+		Date d = date.getTime();
+		return myFormat.format(d) + "," + nickName + "," + score;
 	}
 
 	public GregorianCalendar getDate() {
