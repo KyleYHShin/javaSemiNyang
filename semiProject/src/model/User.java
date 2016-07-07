@@ -24,7 +24,7 @@ public class User {
 	public String toString() {
 		SimpleDateFormat myFormat = new SimpleDateFormat("yy:MM:dd-hh:mm:ss");
 		Date d = date.getTime();
-		return "hi"+myFormat.format(d) + "," + nickName + "," + score;
+		return "My name is yuhwa"+myFormat.format(d) + "," + nickName + "," + score;
 	}
 
 	public GregorianCalendar getDate() {
