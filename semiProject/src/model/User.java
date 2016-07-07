@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class User {
+public class User implements Serializable{
 
 	private GregorianCalendar date;
 	private String nickName;
