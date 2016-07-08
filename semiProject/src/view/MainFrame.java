@@ -40,7 +40,7 @@ public class MainFrame extends JFrame {
 		rankPanel.setSize(300, 500);
 		rankPanel.setLocation(700, 0);
 		rankPanel.setBackground(Color.GREEN);
-		rankPanel.add(new RankView().makeRankView());
+//		rankPanel.add(new RankView().makeRankView());
 		this.add(rankPanel);
 
 		buttonPanel.setSize(300, 200);
