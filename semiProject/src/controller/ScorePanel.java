@@ -1,5 +1,5 @@
 package controller;
 
-public class ButtonColor {
+public class ScorePanel {
 
 }
