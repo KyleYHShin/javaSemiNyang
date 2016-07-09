@@ -2,11 +2,14 @@ package view;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.GregorianCalendar;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 
 import controller.RankListController;
+import model.User;
 
 public class RankView extends JPanel {
 	private RankListController rController;
@@ -18,7 +21,6 @@ public class RankView extends JPanel {
 	private JTable rankTable;
 	private JScrollPane rankScroll;
 	private String[] columnNames = { "랭킹", "닉네임", "점수", "날짜" };
-	private Object[][] data;
 	private DefaultTableModel model;
 
 	private String myNickName = "";
@@ -29,7 +31,7 @@ public class RankView extends JPanel {
 	public RankView() {
 		rController = new RankListController();
 	}
-	
+
 	public JPanel makeRankView() {
 		// 큰 패널 생성(반환되는 패널)
 		// 크기 : 300 * 650
@@ -39,7 +41,6 @@ public class RankView extends JPanel {
 
 		// 1단 패널 : JRadioButton*3
 		firstPane = new JPanel();
-		// first.setLayout(new GridLayout(1, 3));
 		firstPane.setPreferredSize(new Dimension(300, 30));
 		// 객체 생성
 		jrBtnMonthly = new JRadioButton("월별", true);
@@ -60,43 +61,32 @@ public class RankView extends JPanel {
 		firstPane.add(jrBtnWeekly);
 		firstPane.add(jrBtnDaily);
 
-		// 2단 패널 : JTable (사용자 닉네임칸은 유색 처리?)
+		// 2단 패널 : JTable
+		// ■■■■■ 사용자 닉네임칸 유색 처리 ■■■■■
 		secondPane = new JPanel();
 		secondPane.setPreferredSize(new Dimension(300, 400));
 		// 객체 생성
 		rankTable = new JTable();
-		
-		// controller에 있는 점수 목록 불러오기
-		// data = rController.getRankList(jrBtnMonthly.getText(), false);
-		data = rController.getRankList(jrBtnMonthly.getText(), true);
-		
-		model = new DefaultTableModel(data, columnNames);
+		// 서버에 있는 점수 목록 불러오기
+		model = new DefaultTableModel(rController.getRankList(jrBtnMonthly.getText(), true), columnNames);
 		rankTable.setModel(model);
-
+		// ■■■■■ 열 너비 편집 불가 설정 필요 ■■■■■
+		// ■■■■■ 열 너비 설정 필요 ■■■■■
 		rankTable.getColumn("랭킹").setPreferredWidth(10);
-		rankTable.getColumn("닉네임").setPreferredWidth(20);
-		rankTable.getColumn("점수").setPreferredWidth(30);
-		rankTable.getColumn("날짜").setPreferredWidth(40);
 		// 편집 불가
 		rankTable.setEnabled(isValid());
 		// 열 구분 제거
 		rankTable.setShowVerticalLines(false);
-		// 스크롤바 적용하여 추가
 		rankScroll = new JScrollPane(rankTable);
 		// 2단 패널에 추가
 		secondPane.add(rankScroll);
 
-		// 3단 : 사용자 닉네임이 기입된 경우 최고 순위 출력
+		// ■■■■■ 3단 : 사용자 닉네임이 기입된 경우 최고 순위 출력 ■■■■■
 		thirdPane = new JPanel();
 		thirdPane.setPreferredSize(new Dimension(300, 80));
 		// 객체 생성
 		Object rowData1[][] = { { 1, "맛동산", 100, "오리온" } };
 		myTable = new JTable(rowData1, columnNames);
-		// 후에 열 너비 설정 필요
-		// myTable.getColumn("랭킹").setPreferredWidth(30);
-		// myTable.getColumn("닉네임").setPreferredWidth(70);
-		// myTable.getColumn("점수").setPreferredWidth(80);
-		// myTable.getColumn("날짜").setPreferredWidth(100);
 		myTable.setEnabled(isValid());
 		myTable.setShowVerticalLines(false);
 		// 3단 패널에 추가
@@ -130,25 +120,30 @@ public class RankView extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JRadioButton jBtn = (JRadioButton) e.getSource();
-
-			data = rController.getRankList(jBtn.getText(), false);
-			model = new DefaultTableModel(data, columnNames);
-			rankTable.setModel(model);
+			updateJTable(rController.getRankList(jBtn.getText(), false));
 		}
-
 	}
-	
-	//미구현
+
+	private void updateJTable(Object[][] data) {
+		model = new DefaultTableModel(data, columnNames);
+		rankTable.setModel(model);
+		// ■■■■■ 사용자 닉네임칸 유색 처리 ■■■■■
+	}
+
+	// ■■■■■ (미구현) 닉네임 검색 ■■■■■
 	public class RankButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JButton rBtn = (JButton) e.getSource();
-			if (rBtn.getText().equals("닉네임 검색"))
-				System.out.println(rBtn.getText());
-			else if (rBtn.getText().equals("랭킹 업데이트")){
-				data = rController.getRankList(rBtn.getText(), false);
-				model = new DefaultTableModel(data, columnNames);
-				rankTable.setModel(model);
+			if (rBtn.getText().equals("닉네임 검색")) {
+				// ■■■■■ 게임종료 후 자기 기록 업데이트용(게임화면에서 호출할 내용) ■■■■■
+				User newUser = new User("newMember", 77777, new GregorianCalendar());
+				updateJTable(rController.updateNewUser(newUser));
+				jrBtnMonthly.setSelected(true);
+
+			} else if (rBtn.getText().equals("랭킹 업데이트")) {
+				updateJTable(rController.getRankList(jrBtnMonthly.getText(), true));
+				jrBtnMonthly.setSelected(true);
 			}
 		}
 

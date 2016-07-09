@@ -1,7 +1,6 @@
 package controller;
 
 import java.util.*;
-
 import model.User;
 
 public class RankListController {
@@ -11,18 +10,21 @@ public class RankListController {
 	private Client client;
 
 	public RankListController() {
-//		client = new Client();
+		client = new Client();
 	}
 
+	//자신의 기록 서버에 업데이트 후 다운로드
+	public Object[][] updateNewUser(User newUser) {
+		//수신받을 때까지 창띄워서 다른작업 불가하도록...
+		users = client.getUsers(newUser);
+		return toObjectArray(getSortedUsers(users));
+	}
+	//기존 유저데이터 갱신 및 정렬 
 	public Object[][] getRankList(String btnName, boolean netWork) {
 		// 통신이 필요하다고 할때만 users 갱신
 		if (netWork) {
-			// User newUser = new User("Kyle", 1111, new GregorianCalendar());
-			// Client client = new Client(newUser);
-			// users = client.getRankList();
-
-			users = new Client().getUsers(CHECK_GET);
-//			users = client.getUsers(CHECK_GET);
+			//수신받을 때까지 창띄워서 다른작업 불가하도록...
+			users = client.getUsers("get");
 		}
 		return toObjectArray(getSortedUsers(selectUsers(btnName, users)));
 	}
@@ -39,13 +41,11 @@ public class RankListController {
 		else if (btnName.equals("일별"))
 			timeTerm = 24 * 60 * 60;
 
-		// System.out.println(btnName + " : " + timeTerm);
 		// 현재시간
 		long today = new GregorianCalendar(Locale.KOREA).getTimeInMillis();
 
 		List<User> selectList = null;
 		if (users != null) {
-			// 필요한 값들만 추출하여 List<User>에 입력
 			selectList = new ArrayList<User>();
 			for (User u : users) {
 				long gameDate = u.getDate().getTimeInMillis();
@@ -54,17 +54,14 @@ public class RankListController {
 				}
 			}
 		}
-
 		return selectList;
 	}
 
 	// 목록의 점수기준 내림차순 정렬
 	private List<User> getSortedUsers(List<User> selectedUsers) {
-		// 점수에 따라 정렬 Descending sorting
 		if (selectedUsers != null) {
 			selectedUsers.sort(new RankDescending());
 		}
-		// System.out.println(selectedUsers);
 		return selectedUsers;
 	}
 
@@ -81,11 +78,6 @@ public class RankListController {
 				users[i][3] = sortedUser.get(i).getDateToString();
 			}
 		}
-		// System.out.println();
-		// for(int i =0; i<users.length; i++){
-		// System.out.println(users[i][0] + "," + users[i][1] + "," +
-		// users[i][2] + "," + users[i][3] );
-		// }
 		return users;
 	}
 }

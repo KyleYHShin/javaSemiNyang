@@ -8,5 +8,4 @@ public class Run {
 		MainFrame mf = new MainFrame();
 		mf.setMainFrame();
 	}
-
 }
