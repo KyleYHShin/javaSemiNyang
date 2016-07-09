@@ -12,20 +12,29 @@ import controller.Controller;
 public class ButtonView extends JFrame {
 
 	private JToggleButton startBtn;
-	private JButton endTempBtn;
 	private JButton exitBtn;
 
-	private long endTime;
+	
 	private int level = 1;
 	private int score = 0;
 
 	private static long startTime;
 	private static long playTime;
 	private long pauseTime;
+	private long endTime;
 
+	
+	
 	public ButtonView() {
 	}
+	public int getLevel() {
+		return level;
+	}
 
+	public int getScore() {
+		return score;
+	}
+	
 	public static long getStartTime() {
 		return startTime;
 	}
@@ -37,17 +46,15 @@ public class ButtonView extends JFrame {
 	public long getPlayTime() {
 		return playTime;
 	}
-
 	public long getEndTime() {
 		return endTime;
 	}
-
-	public int getLevel() {
-		return level;
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
-	public int getScore() {
-		return score;
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 	public void setStartTime(long startTime) {
@@ -61,19 +68,10 @@ public class ButtonView extends JFrame {
 	public void setPlayTime(long playTime) {
 		this.playTime = playTime;
 	}
-
 	public void setEndTime(long endTime) {
 		this.endTime = endTime;
 	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	public void setScore(int score) {
-		this.score = score;
-	}
-
+	
 	
 	public JButton makeExitButton() {
 		MainFrame main = new MainFrame();
@@ -125,7 +123,7 @@ class ActionEventStartHandler implements ActionListener {
 			buttonView.setPauseTime(e.getWhen());
 			System.out.println("pauseTime : " + buttonView.getPauseTime());
 			System.out.println("지난 스타트타임" + buttonView.getStartTime());
-			tempPlayTime += buttonView.getPlayTime() + (buttonView.getPauseTime() - buttonView.getStartTime());
+			tempPlayTime += (buttonView.getPauseTime() - buttonView.getStartTime());
 			buttonView.setPlayTime(tempPlayTime);
 			System.out.println("플레이타임 : " + buttonView.getPlayTime());
 			// 테스트용 현재시간 추출

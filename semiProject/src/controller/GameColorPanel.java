@@ -74,6 +74,7 @@ public class GameColorPanel extends JPanel {
 			e.getActionCommand();
 
 			level++;
+			
 			// 기존에 있는 메인프레임의 화면갱신 메서드(resetGamePanel()) 호출
 			mainFrame.resetGamePanel(level);
 		}

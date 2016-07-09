@@ -13,6 +13,7 @@ public class MainFrame extends JFrame {
 	// 임시 정의
 	private static MainFrame mainFrame;
 	
+	
 	private JPanel gamePanel;
 	private JPanel rankPanel;
 	private JPanel buttonPanel;
@@ -24,6 +25,9 @@ public class MainFrame extends JFrame {
 	private JToggleButton startBtn;
 	private JButton exitBtn;
 	
+	private JButton stageBtn;
+	private JButton timeBtn;
+	private JButton scoreBtn;
 	
 	
 	public static void main(String[] args) {
@@ -99,6 +103,7 @@ public class MainFrame extends JFrame {
 		gamePanel.add(colorPanel);
 		gamePanel.add(progressbarPanel);
 
+
 		this.setVisible(true);
 	}
 
@@ -112,6 +117,25 @@ public class MainFrame extends JFrame {
 		colorPanel.add(gcp.makeColorPanel(level, this));
 		colorPanel.revalidate();
 		colorPanel.repaint();
+		
+		scorePanel.removeAll();
+		stageBtn = new JButton("STAGE "+(level-1));
+		stageBtn.setSize(150,75);
+		stageBtn.setLocation(125,25);
+		timeBtn = new JButton();
+		timeBtn.setSize(150,75);
+		timeBtn.setLocation(275,25);
+		scoreBtn = new JButton();
+		scoreBtn.setSize(150,75);
+		scoreBtn.setLocation(425,25);
+		scorePanel.add(stageBtn);
+		scorePanel.add(timeBtn);
+		scorePanel.add(scoreBtn);
+		scorePanel.revalidate();
+		scorePanel.repaint();
+		
+		//progressbar 리셋 필요
+		
 	}
 
 	//
@@ -120,18 +144,27 @@ public class MainFrame extends JFrame {
 		// 게임 중이지 않을때의 초기화면 필요
 		// (게임명이라던가 단순한 이미지 뿌리기라던가...)
 		colorPanel.removeAll();
-		colorPanel.setBackground(Color.BLACK);
 		colorPanel.revalidate();
 		colorPanel.repaint();
+		
+		scorePanel.removeAll();
+		scorePanel.revalidate();
+		scorePanel.repaint();
+		
+		progressbarPanel.removeAll();
+		progressbarPanel.revalidate();
+		progressbarPanel.repaint();
 	}
 	
 	// 내부클래스로 startButton 이벤트 처리  
 	private class startButtonActionListener implements ActionListener {  
 		@Override  
 		public void actionPerformed(ActionEvent e) {  
-		mainFrame.resetGamePanel(2);
-		
+			
+			mainFrame.resetGamePanel(2);
+			
 	 	}  
 	}  
-		
+	
+	
 }

@@ -7,12 +7,12 @@ public class Controller {
 	
 	public Controller(){}
 	
-	public long scoreCalc(int level, long playtime, long startTime, long endTime){
+	public long scoreCalc(int level, long clearTime, long startTime, long pauseTime){
 		long totalPlayTime = 0;
-		totalPlayTime += (playtime + (endTime - startTime)); 
+		totalPlayTime +=(pauseTime - startTime); 
 		
-		
-		score += totalPlayTime*level;
+		//		    주어진시간	     clear에 소요시간               clear 당시 레벨
+		//score += (15-(clearTime-startTime))*level
 		
 		return score;
 		
