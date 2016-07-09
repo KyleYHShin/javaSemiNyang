@@ -14,7 +14,7 @@ public class User implements Serializable{
 	public User() {		
 	}
 
-	public User(GregorianCalendar date, String nickName, int score) {
+	public User(String nickName, int score, GregorianCalendar date) {
 		super();
 		this.date = date;
 		this.nickName = nickName;
@@ -30,6 +30,12 @@ public class User implements Serializable{
 
 	public GregorianCalendar getDate() {
 		return date;
+	}
+	
+	public String getDateToString(){
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy≥‚MMø˘dd¿œ hh:mm:ss");
+		Date d = date.getTime();
+		return myFormat.format(d);		
 	}
 
 	public String getNickName() {
