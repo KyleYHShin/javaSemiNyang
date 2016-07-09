@@ -22,7 +22,6 @@ public class MainFrame extends JFrame {
 	
 	//유화 버튼 추가
 	private JToggleButton startBtn;
-	private JButton endTempBtn;
 	private JButton exitBtn;
 	
 	
@@ -63,16 +62,14 @@ public class MainFrame extends JFrame {
 		buttonPanel.setLocation(700, 550);
 		buttonPanel.setBackground(Color.BLUE);
 		
+		
+		
 		// 유화 버튼기능 버튼패널에 적용
 		startBtn = bv.makeStartButton();
-		
 		startButtonActionListener startAction = new startButtonActionListener();  
 		startBtn.addActionListener(startAction);  
-
-		buttonPanel.add(startBtn);
-		endTempBtn = bv.makeEndTempBtn();
-		buttonPanel.add(endTempBtn);
 		exitBtn = bv.makeExitButton();
+		buttonPanel.add(startBtn);
 		buttonPanel.add(exitBtn);
 		
 		this.add(buttonPanel);
@@ -132,7 +129,8 @@ public class MainFrame extends JFrame {
 	private class startButtonActionListener implements ActionListener {  
 		@Override  
 		public void actionPerformed(ActionEvent e) {  
-		mainFrame.resetGamePanel(2);  
+		mainFrame.resetGamePanel(2);
+		
 	 	}  
 	}  
 		

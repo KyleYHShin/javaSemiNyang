@@ -34,7 +34,7 @@ public class GameColorPanel extends JPanel {
 		colorPanel.setLayout(new GridLayout(level, level));
 		//////////////////////////////////////////////////////
 		// 일정레벨 이상일 때 칸 갯수 더이상 증가 못하게
-		// 색상 변경 알고리즘 추가->	Btn[i].setBackground(Color.BLACK);
+		// 색상 변경 알고리즘 추가-> Btn[i].setBackground(Color.BLACK);
 		//
 		//////////////////////////////////////////////////////
 		// 버튼 갯수 초기화
@@ -43,24 +43,24 @@ public class GameColorPanel extends JPanel {
 		Random r = new Random();
 		int answer = (int) (r.nextInt(level * level));
 		// 이벤트 연결
-		GameButtonActionListener btnListener = new GameButtonActionListener();
-
+		GameButtonActionListener1 btnListener1 = new GameButtonActionListener1();
+		GameButtonActionListener2 btnListener2 = new GameButtonActionListener2();
 		// 조건에 맞게 버튼 생성
 		for (int i = 0; i < level * level; i++) {
 			Btn[i] = new JButton();
 
 			if (i == answer) {
-				//버튼에 있는 text 안보이게 설정 필요
-				Btn[i].setText("정답");
+				// 버튼에 있는 text 안보이게 설정 필요
+
 				Btn[i].setBackground(Color.BLACK);
-				Btn[i].addActionListener(btnListener);
+				Btn[i].addActionListener(btnListener1);
 			} else {
-				Btn[i].setText("오답");
+
 				Btn[i].setBackground(Color.YELLOW);
-				Btn[i].addActionListener(btnListener);
+				Btn[i].addActionListener(btnListener2);
 				ButtonView bv = new ButtonView();
-				
-				//끝냈을 때 이벤트 연동 필요
+
+				// 끝냈을 때 이벤트 연동 필요
 			}
 			colorPanel.add(Btn[i]);
 		}
@@ -68,27 +68,47 @@ public class GameColorPanel extends JPanel {
 	}
 
 	// 내부클래스로 Button 이벤트 처리
-	private class GameButtonActionListener implements ActionListener {
+	private class GameButtonActionListener1 implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JButton button = (JButton) e.getSource();
+			e.getActionCommand();
 
-			if (button.getText().equals("정답")) {
-				level++;
-				// 기존에 있는 메인프레임의 화면갱신 메서드(resetGamePanel()) 호출
-				mainFrame.resetGamePanel(level);
-			} else {
-				// 초기화면으로 돌아가기
-				mainFrame.initializeGamePanel();
-				// 종료화면 구성 추가
-				// "당신의 점수는 " + score + "점수를 업로드 하시겠습니까?" -> 예/아니오
-				// 예 -> 닉네임 기입 후 선택 -> 예/아니오
-				// 예 -> 연호 : 클라이언트.java 호출
-				JOptionPane.showMessageDialog(colorPanel, "게임종료\n점수를 업로드 하시겠습니까?");
-			}
-
+			level++;
+			// 기존에 있는 메인프레임의 화면갱신 메서드(resetGamePanel()) 호출
+			mainFrame.resetGamePanel(level);
 		}
 
 	}
 
+	class GameButtonActionListener2 implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			ButtonView buttonview = new ButtonView();
+			e.getActionCommand();
+
+			buttonview.setEndTime(e.getWhen());
+			System.out.println(buttonview.getEndTime() + "게임 종료");
+
+			int saveResult = JOptionPane.showConfirmDialog(colorPanel, "게임종료\n점수를 업로드 하시겠습니까?", "저장 확인",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+			Controller controller = new Controller();
+			long score = controller.scoreCalc(buttonview.getLevel(), buttonview.getPlayTime(),
+					buttonview.getStartTime(), buttonview.getEndTime());
+			System.out.println(buttonview.getLevel() + "렙, 플레이" + buttonview.getPlayTime() + "타임, 스타트 : "
+					+ buttonview.getStartTime() + "타임, 엔드 : " + buttonview.getEndTime());
+			System.out.println("점수" + score);
+			buttonview.setPlayTime(0);
+			mainFrame.initializeGamePanel();
+
+			if (saveResult == JOptionPane.YES_OPTION) {
+				// 마지막 점수계산
+				// 게임 종료
+				// 서버로 전송
+
+			}
+
+		}
+	}
 }

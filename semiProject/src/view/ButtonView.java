@@ -74,17 +74,11 @@ public class ButtonView extends JFrame {
 		this.score = score;
 	}
 
-	public JButton makeEndTempBtn() {
-		MainFrame main = new MainFrame();
-		endTempBtn = new JButton("End");
-		endTempBtn.addActionListener(new ActionEventHandler(main));
-		return endTempBtn;
-	}
-
+	
 	public JButton makeExitButton() {
 		MainFrame main = new MainFrame();
 		exitBtn = new JButton("Exit");
-		exitBtn.setPreferredSize(new Dimension(150, 75));
+		exitBtn.setPreferredSize(new Dimension(200, 100));
 		exitBtn.addActionListener(new ActionEventExitHandler(main));
 		return exitBtn;
 	}
@@ -153,48 +147,8 @@ class ActionEventStartHandler implements ActionListener {
 
 }
 
-//기존의 2개에서 Exit 떼어서 Exit 버튼 처리, 이거랑 재생버튼이랑 기능 합쳐야됨
-class ActionEventHandler implements ActionListener {
 
-	private JFrame parent;
 
-	public ActionEventHandler(MainFrame parent) {
-		this.parent = parent;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		ButtonView buttonview = new ButtonView();
-		switch (e.getActionCommand()) {
-
-		case "End":
-			buttonview.setEndTime(e.getWhen());
-			System.out.println(buttonview.getEndTime() + "게임 종료");
-
-			int saveResult = JOptionPane.showConfirmDialog(parent, "저장하시겠습니까?", "저장 확인", JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE);
-
-			if (saveResult == JOptionPane.YES_OPTION) {
-				// 마지막 점수계산
-				// 게임 종료
-				Controller controller = new Controller();
-				long score = controller.scoreCalc(buttonview.getLevel(), buttonview.getPlayTime(),
-						buttonview.getStartTime(), buttonview.getEndTime());
-				System.out.println(buttonview.getLevel() + "렙, 플레이" + buttonview.getPlayTime() + "타임, 스타트 : "
-						+ buttonview.getStartTime() + "타임, 엔드 : " + buttonview.getEndTime());
-				System.out.println("점수" + score);
-			} else {
-				buttonview.setPlayTime(0);
-				// 게임 종료
-			} // 게임 시작전 플레이 타임 초기화
-			break;
-
-		}
-	}
-
-	
-}
 class ActionEventExitHandler implements ActionListener {
 	private JFrame parent;
 
