@@ -7,7 +7,7 @@ import javax.swing.event.*;
 import java.util.*;
 import view.*;
 
-public class ColorPanel extends JPanel {
+public class GameColorPanel extends JPanel {
 	JPanel colorPanel;
 	//시작 레벨
 	int Level = 2;

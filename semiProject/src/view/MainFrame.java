@@ -67,7 +67,7 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ColorPanel cp = new ColorPanel();
+				GameColorPanel cp = new GameColorPanel();
 				colorPanel.add(cp.makeColorPanel(2));
 				colorPanel.updateUI();
 			}});
@@ -108,7 +108,7 @@ public class MainFrame extends JFrame {
 	
 	//1.레벨에 맞는 화면 추가
 	public void addLevel(int Level){
-		ColorPanel cp = new ColorPanel();
+		GameColorPanel cp = new GameColorPanel();
 		colorPanel.add(cp.makeColorPanel(Level));
 		
 	}
@@ -121,7 +121,7 @@ public class MainFrame extends JFrame {
 	
 	//2.새로 만들어서 추가 : 오류는 안났지만 안보임
 	public void newLevel(){
-		ColorPanel cp = new ColorPanel();
+		GameColorPanel cp = new GameColorPanel();
 		colorPanel = new JPanel();
 		colorPanel.add(cp.makeColorPanel(3));
 		colorPanel.updateUI();
