@@ -21,18 +21,15 @@ public class RankView extends JPanel {
 	private Object[][] data;
 	private DefaultTableModel model;
 
-	// private String myNickName = "";
+	private String myNickName = "";
 	private JTable myTable;
 
-	private JButton btnNickName, btnRefresh;
+	private JButton btnNickName, btnUpdate;
 
 	public RankView() {
 		rController = new RankListController();
 	}
-
-	// 미구현 기능
-	// JRadioButton 클릭 이벤트마다
-	// 점수목록 불러와 정렬하여 rankTable 과 myTable에 추가
+	
 	public JPanel makeRankView() {
 		// 큰 패널 생성(반환되는 패널)
 		// 크기 : 300 * 650
@@ -68,8 +65,11 @@ public class RankView extends JPanel {
 		secondPane.setPreferredSize(new Dimension(300, 400));
 		// 객체 생성
 		rankTable = new JTable();
+		
 		// controller에 있는 점수 목록 불러오기
-		data = rController.getRankList(jrBtnMonthly.getText(), false);
+		// data = rController.getRankList(jrBtnMonthly.getText(), false);
+		data = rController.getRankList(jrBtnMonthly.getText(), true);
+		
 		model = new DefaultTableModel(data, columnNames);
 		rankTable.setModel(model);
 
@@ -92,13 +92,12 @@ public class RankView extends JPanel {
 		// 객체 생성
 		Object rowData1[][] = { { 1, "맛동산", 100, "오리온" } };
 		myTable = new JTable(rowData1, columnNames);
+		// 후에 열 너비 설정 필요
 		// myTable.getColumn("랭킹").setPreferredWidth(30);
 		// myTable.getColumn("닉네임").setPreferredWidth(70);
 		// myTable.getColumn("점수").setPreferredWidth(80);
 		// myTable.getColumn("날짜").setPreferredWidth(100);
-		// 편집 불가
 		myTable.setEnabled(isValid());
-		// 열 구분 제거
 		myTable.setShowVerticalLines(false);
 		// 3단 패널에 추가
 		thirdPane.add(myTable);
@@ -108,15 +107,15 @@ public class RankView extends JPanel {
 		fourthPane.setPreferredSize(new Dimension(300, 140));
 		// 객체 생성
 		fourthPane.setLayout(new GridLayout(1, 2));
-		btnNickName = new JButton("닉네임 입력");
-		btnRefresh = new JButton("Refresh");
+		btnNickName = new JButton("닉네임 검색");
+		btnUpdate = new JButton("랭킹 업데이트");
 		// 이벤트 연결
 		RankButtonActionListener btnListener = new RankButtonActionListener();
 		btnNickName.addActionListener(btnListener);
-		btnRefresh.addActionListener(btnListener);
+		btnUpdate.addActionListener(btnListener);
 		// 4단 패널에 추가
 		fourthPane.add(btnNickName);
-		fourthPane.add(btnRefresh);
+		fourthPane.add(btnUpdate);
 
 		rankPanel.add(firstPane);
 		rankPanel.add(secondPane);
@@ -130,18 +129,27 @@ public class RankView extends JPanel {
 	private class RankJRadioButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JRadioButton jb = (JRadioButton) e.getSource();
+			JRadioButton jBtn = (JRadioButton) e.getSource();
 
-			data = rController.getRankList(jb.getText(), false);
+			data = rController.getRankList(jBtn.getText(), false);
 			model = new DefaultTableModel(data, columnNames);
 			rankTable.setModel(model);
+		}
 
-			// to check changed data
-			// System.out.println(jb.getText());
-			// for (int i = 0; i < data.length; i++) {
-			// System.out.println(data[i][0] + "," + data[i][1] + "," +
-			// data[i][2] + "," + data[i][3]);
-			// }
+	}
+	
+	//미구현
+	public class RankButtonActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JButton rBtn = (JButton) e.getSource();
+			if (rBtn.getText().equals("닉네임 검색"))
+				System.out.println(rBtn.getText());
+			else if (rBtn.getText().equals("랭킹 업데이트")){
+				data = rController.getRankList(rBtn.getText(), false);
+				model = new DefaultTableModel(data, columnNames);
+				rankTable.setModel(model);
+			}
 		}
 
 	}

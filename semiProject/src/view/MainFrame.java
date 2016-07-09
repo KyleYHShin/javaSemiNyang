@@ -8,11 +8,6 @@ public class MainFrame extends JFrame {
 	private JPanel rankPanel;
 	private JPanel buttonPanel;
 
-	public static void main(String[] args) {
-		MainFrame mf = new MainFrame();
-		mf.setMainFrame();
-	}
-
 	public MainFrame() {
 	}
 

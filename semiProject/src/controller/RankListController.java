@@ -5,36 +5,24 @@ import java.util.*;
 import model.User;
 
 public class RankListController {
+	// 명령어 상수
+	private final String CHECK_GET = "get";
 	private List<User> users;
+	private Client client;
 
 	public RankListController() {
+//		client = new Client();
 	}
 
 	public Object[][] getRankList(String btnName, boolean netWork) {
-		// Test
-		users = new ArrayList<User>();
-		GregorianCalendar gcal;
-		users.add(new User("Kyle", 1111, new GregorianCalendar()));
-		users.add(new User("Kyle", 222, new GregorianCalendar()));
-		users.add(new User("명", 4444, new GregorianCalendar()));
-		gcal = new GregorianCalendar(2016, 6, 2);
-		users.add(new User("유화", 2390, gcal));
-		gcal = new GregorianCalendar(2016, 5, 27);
-		users.add(new User("Kyle", 2, gcal));
-		gcal = new GregorianCalendar(2016, 5, 25);
-		users.add(new User("명", 11231, gcal));
-		gcal = new GregorianCalendar(2016, 6, 1);
-		users.add(new User("이슬", 643, gcal));
-		gcal = new GregorianCalendar(2016, 6, 7);
-		users.add(new User("유화", 467, gcal));
-		gcal = new GregorianCalendar(2016, 4, 27);
-		users.add(new User("슬", 34343, gcal));
-
 		// 통신이 필요하다고 할때만 users 갱신
 		if (netWork) {
-			Client client = new Client();
-			// users = new Users[];
+			// User newUser = new User("Kyle", 1111, new GregorianCalendar());
+			// Client client = new Client(newUser);
 			// users = client.getRankList();
+
+			users = new Client().getUsers(CHECK_GET);
+//			users = client.getUsers(CHECK_GET);
 		}
 		return toObjectArray(getSortedUsers(selectUsers(btnName, users)));
 	}
