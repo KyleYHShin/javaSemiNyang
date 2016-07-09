@@ -4,23 +4,29 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import java.io.File;
+import javax.imageio.ImageIO;
 import controller.*;
 
 public class MainFrame extends JFrame {
 
+	// 임시 정의
+	private static MainFrame mainFrame;
+	
 	private JPanel gamePanel;
 	private JPanel rankPanel;
 	private JPanel buttonPanel;
 	private JPanel colorPanel;
 	private JPanel scorePanel;
 	private JPanel progressbarPanel;
-
-	// 임시 정의
-	private static MainFrame mainFrame;
-
-	// 임의의 시작버튼 추가
-	private JButton StartBtn;
-
+	
+	//유화 버튼 추가
+	private JToggleButton startBtn;
+	private JButton endTempBtn;
+	private JButton exitBtn;
+	
+	
+	
 	public static void main(String[] args) {
 		mainFrame = new MainFrame();
 		mainFrame.setMainFrame();
@@ -30,6 +36,8 @@ public class MainFrame extends JFrame {
 	}
 
 	public void setMainFrame() {
+		ButtonView bv = new ButtonView();
+		
 		// 윈도우 창 초기화 --------------------------------
 		this.setTitle("반응하라! 절대 색감");
 		this.setBounds(new Rectangle(0, 0, 1000, 850));
@@ -46,22 +54,30 @@ public class MainFrame extends JFrame {
 		gamePanel.setLocation(0, 0);
 		this.add(gamePanel);
 
-		rankPanel.setSize(300, 500);
+		rankPanel.setSize(300, 550);
 		rankPanel.setLocation(700, 0);
 		rankPanel.setBackground(Color.GREEN);
 		this.add(rankPanel);
 
-		buttonPanel.setSize(300, 200);
-		buttonPanel.setLocation(700, 500);
+		buttonPanel.setSize(300, 300);
+		buttonPanel.setLocation(700, 550);
 		buttonPanel.setBackground(Color.BLUE);
+		
+		// 유화 버튼기능 버튼패널에 적용
+		startBtn = bv.makeStartButton();
+		
+		startButtonActionListener startAction = new startButtonActionListener();  
+		startBtn.addActionListener(startAction);  
 
-		// 게임 패널용 임시 시작버튼 추가////////////////////////
-		StartBtn = new JButton("시작");
-		startButtonActionListener startAction = new startButtonActionListener();
-		StartBtn.addActionListener(startAction);
-		buttonPanel.add(StartBtn);
+		buttonPanel.add(startBtn);
+		endTempBtn = bv.makeEndTempBtn();
+		buttonPanel.add(endTempBtn);
+		exitBtn = bv.makeExitButton();
+		buttonPanel.add(exitBtn);
+		
 		this.add(buttonPanel);
-
+		
+		
 		// gamePanel 소속 패널들 초기화
 		scorePanel = new JPanel();
 		scorePanel.setLayout(null);
@@ -89,32 +105,14 @@ public class MainFrame extends JFrame {
 		this.setVisible(true);
 	}
 
-	public void addColorPanel() {
-		colorPanel.setLayout(null);
-		colorPanel.setSize(600, 600);
-		colorPanel.setLocation(50, 100);
-		colorPanel.setBackground(Color.BLACK);
-	}
-
-	public void addScorePanel() {
-		scorePanel.setLayout(null);
-		scorePanel.setSize(700, 100);
-		scorePanel.setLocation(0, 0);
-		scorePanel.setBackground(Color.ORANGE);
-	}
-
-	public void addProgressbarPanel() {
-		progressbarPanel.setLayout(null);
-		progressbarPanel.setSize(700, 150);
-		progressbarPanel.setLocation(0, 700);
-		progressbarPanel.setBackground(Color.RED);
-	}
-
+	
 	public void resetGamePanel(int level) {
+		
+		GameColorPanel gcp = new GameColorPanel();
 		// 패널에 있는 객체들 모두 삭제
 		colorPanel.removeAll();
 		// 새 객체(패널) 생성하여 추가
-		colorPanel.add(new GameColorPanel().makeColorPanel(level, this));
+		colorPanel.add(gcp.makeColorPanel(level, this));
 		colorPanel.revalidate();
 		colorPanel.repaint();
 	}
@@ -129,12 +127,13 @@ public class MainFrame extends JFrame {
 		colorPanel.revalidate();
 		colorPanel.repaint();
 	}
-
-	// 내부클래스로 startButton 이벤트 처리
-	private class startButtonActionListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			mainFrame.resetGamePanel(2);
-		}
-	}
+	
+	// 내부클래스로 startButton 이벤트 처리  
+	private class startButtonActionListener implements ActionListener {  
+		@Override  
+		public void actionPerformed(ActionEvent e) {  
+		mainFrame.resetGamePanel(2);  
+	 	}  
+	}  
+		
 }

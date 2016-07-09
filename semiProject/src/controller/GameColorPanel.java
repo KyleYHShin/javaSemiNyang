@@ -15,6 +15,14 @@ public class GameColorPanel extends JPanel {
 	// 시작 레벨
 	private int level;
 
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
 	public JPanel makeColorPanel(int newLevel, MainFrame getFrame) {
 		this.level = newLevel;
 		// 기존에 있는 메인프레임 레퍼런스 저장
@@ -50,6 +58,9 @@ public class GameColorPanel extends JPanel {
 				Btn[i].setText("오답");
 				Btn[i].setBackground(Color.YELLOW);
 				Btn[i].addActionListener(btnListener);
+				ButtonView bv = new ButtonView();
+				
+				//끝냈을 때 이벤트 연동 필요
 			}
 			colorPanel.add(Btn[i]);
 		}
