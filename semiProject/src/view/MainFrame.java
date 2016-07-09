@@ -18,8 +18,6 @@ public class MainFrame extends JFrame {
 	//임의의 시작버튼 추가
 	private JButton StartBtn;
 	
-	
-
 	public static void main(String[] args) {
 		MainFrame mf = new MainFrame();
 		mf.setMainFrame();
@@ -29,9 +27,6 @@ public class MainFrame extends JFrame {
 	}
 
 	public void setMainFrame() {
-		
-		
-		
 		// 윈도우 창 초기화 --------------------------------
 		this.setTitle("반응하라! 절대 색감");
 		this.setBounds(new Rectangle(0, 0, 1000, 850));
