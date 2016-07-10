@@ -29,7 +29,16 @@ public class MainFrame extends JFrame {
 	private JButton timeBtn;
 	private JButton scoreBtn;
 	
+	long startTime;
 	
+	public long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
 	public static void main(String[] args) {
 		mainFrame = new MainFrame();
 		mainFrame.setMainFrame();
@@ -160,7 +169,7 @@ public class MainFrame extends JFrame {
 	private class startButtonActionListener implements ActionListener {  
 		@Override  
 		public void actionPerformed(ActionEvent e) {  
-			
+			setStartTime(e.getWhen());
 			mainFrame.resetGamePanel(2);
 			
 	 	}  

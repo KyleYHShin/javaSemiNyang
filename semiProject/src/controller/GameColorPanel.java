@@ -3,6 +3,8 @@ package controller;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
+
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -13,8 +15,8 @@ public class GameColorPanel extends JPanel {
 	private JPanel colorPanel;
 	private MainFrame mainFrame;
 	// 시작 레벨
-	private int level;
-
+	private int level = 1;
+	long totalscore =0;
 	public int getLevel() {
 		return level;
 	}
@@ -71,14 +73,31 @@ public class GameColorPanel extends JPanel {
 	private class GameButtonActionListener1 implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			SimpleDateFormat sdf = new SimpleDateFormat("ss.SSS");
+			//각 스테이지 계산 처리는 되는데 합산이 안됨
 			e.getActionCommand();
-
+			long clearTime = e.getWhen();
+			String time = sdf.format(clearTime - mainFrame.getStartTime());
+			System.out.println("클리어 소요 시간 : "+Double.parseDouble(time));
+			long score = (long)((10.000-Double.parseDouble(time))*level*100);
+			//여기서부터 더해주는건데 안됨 ㅠ
+			setTotalscore(getTotalscore()+score);
+			System.out.println("level : "+ level);
+			mainFrame.setStartTime(clearTime);
 			level++;
-			
+			System.out.println("점수 : " + getTotalscore());
 			// 기존에 있는 메인프레임의 화면갱신 메서드(resetGamePanel()) 호출
 			mainFrame.resetGamePanel(level);
 		}
 
+	}
+
+	public long getTotalscore() {
+		return totalscore;
+	}
+
+	public void setTotalscore(long totalscore) {
+		this.totalscore = totalscore;
 	}
 
 	class GameButtonActionListener2 implements ActionListener {

@@ -6,6 +6,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import javax.imageio.ImageIO;
 import controller.Controller;
 
@@ -118,14 +121,16 @@ class ActionEventStartHandler implements ActionListener {
 		ButtonView buttonView = new ButtonView();
 		if (pause) {
 			// 게임 중에 pause 기능
+			SimpleDateFormat sdf = new SimpleDateFormat("mm분 ss.SSS초");
 			System.out.println("멈춤");
 			pause = false;
 			buttonView.setPauseTime(e.getWhen());
-			System.out.println("pauseTime : " + buttonView.getPauseTime());
+			System.out.println("pauseTime : " + (buttonView.getPauseTime()));
 			System.out.println("지난 스타트타임" + buttonView.getStartTime());
+			
 			tempPlayTime += (buttonView.getPauseTime() - buttonView.getStartTime());
 			buttonView.setPlayTime(tempPlayTime);
-			System.out.println("플레이타임 : " + buttonView.getPlayTime());
+			System.out.println("플레이타임 : " + sdf.format(buttonView.getPlayTime()));
 			// 테스트용 현재시간 추출
 			// 테스트용 현지시간 출력= e.getWhen();
 			// 특정 메서드에 현재시간 전달
