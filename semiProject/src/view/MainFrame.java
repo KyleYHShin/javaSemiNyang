@@ -1,179 +1,69 @@
 package view;
 
 import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+
 import javax.imageio.ImageIO;
-import controller.*;
+import javax.swing.*;
 
 public class MainFrame extends JFrame {
-
-	// 임시 정의
-	private static MainFrame mainFrame;
-	
-	
 	private JPanel gamePanel;
 	private JPanel rankPanel;
 	private JPanel buttonPanel;
-	private JPanel colorPanel;
-	private JPanel scorePanel;
-	private JPanel progressbarPanel;
-	
-	//유화 버튼 추가
-	private JToggleButton startBtn;
-	private JButton exitBtn;
-	
-	private JButton stageBtn;
-	private JButton timeBtn;
-	private JButton scoreBtn;
-	
-	long startTime;
-	
-	public long getStartTime() {
-		return startTime;
-	}
 
-	public void setStartTime(long startTime) {
-		this.startTime = startTime;
-	}
-
+	
 	public static void main(String[] args) {
-		mainFrame = new MainFrame();
-		mainFrame.setMainFrame();
+		MainFrame mf = new MainFrame();
+		mf.setMainFrame();
 	}
 
 	public MainFrame() {
 	}
 
 	public void setMainFrame() {
-		ButtonView bv = new ButtonView();
-		
-		// 윈도우 창 초기화 --------------------------------
+		// 윈도우 창 초기화 ----------------------------------------
 		this.setTitle("반응하라! 절대 색감");
-		this.setBounds(new Rectangle(0, 0, 1000, 850));
+		this.setBounds(new Rectangle(50, 50, 1000, 700));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		// 크기 변경 불가
-		this.setLayout(null);
+
 		gamePanel = new JPanel();
 		rankPanel = new JPanel();
 		buttonPanel = new JPanel();
 
-		gamePanel.setLayout(null);
-		gamePanel.setSize(700, 850);
+		// 배치관리자 없이 자유롭게 설정가능한 컨테이너
+		this.setLayout(null);
+
+		gamePanel.setSize(700, 700);
 		gamePanel.setLocation(0, 0);
+		// gamePanel.setBackground(Color.RED);// 테스트
+		// gamePanel.add(/*각자 생성한 UI 객체 리턴*/);
+		
 		this.add(gamePanel);
 
-		rankPanel.setSize(300, 550);
+		rankPanel.setSize(300, 500);
 		rankPanel.setLocation(700, 0);
 		rankPanel.setBackground(Color.GREEN);
+//		rankPanel.add(new RankView().makeRankView());
 		this.add(rankPanel);
 
-		buttonPanel.setSize(300, 300);
-		buttonPanel.setLocation(700, 550);
+		
+		// buttonPanel.add(/*각자 생성한 UI 객체 리턴*/);
+		buttonPanel.setSize(300, 200);
+		buttonPanel.setLocation(700, 500);
 		buttonPanel.setBackground(Color.BLUE);
 		
+		buttonPanel.add(new ButtonView().makeButtonView());
 		
-		
-		// 유화 버튼기능 버튼패널에 적용
-		startBtn = bv.makeStartButton();
-		startButtonActionListener startAction = new startButtonActionListener();  
-		startBtn.addActionListener(startAction);  
-		exitBtn = bv.makeExitButton();
-		buttonPanel.add(startBtn);
-		buttonPanel.add(exitBtn);
+
 		
 		this.add(buttonPanel);
-		
-		
-		// gamePanel 소속 패널들 초기화
-		scorePanel = new JPanel();
-		scorePanel.setLayout(null);
-		scorePanel.setSize(700, 100);
-		scorePanel.setLocation(0, 0);
-		scorePanel.setBackground(Color.ORANGE);
-
-		colorPanel = new JPanel();
-		colorPanel.setLayout(null);
-		colorPanel.setSize(600, 600);
-		colorPanel.setLocation(50, 100);
-		colorPanel.setBackground(Color.BLACK);
-
-		progressbarPanel = new JPanel();
-		progressbarPanel.setLayout(null);
-		progressbarPanel.setSize(700, 150);
-		progressbarPanel.setLocation(0, 700);
-		progressbarPanel.setBackground(Color.RED);
-
-		// gamePanel에 추가
-		gamePanel.add(scorePanel);
-		gamePanel.add(colorPanel);
-		gamePanel.add(progressbarPanel);
-
 
 		this.setVisible(true);
 	}
+	
+	
 
-	
-	public void resetGamePanel(int level) {
-		
-		GameColorPanel gcp = new GameColorPanel();
-		// 패널에 있는 객체들 모두 삭제
-		colorPanel.removeAll();
-		// 새 객체(패널) 생성하여 추가
-		colorPanel.add(gcp.makeColorPanel(level, this));
-		colorPanel.revalidate();
-		colorPanel.repaint();
-		
-		scorePanel.removeAll();
-		stageBtn = new JButton("STAGE "+(level-1));
-		stageBtn.setSize(150,75);
-		stageBtn.setLocation(125,25);
-		timeBtn = new JButton();
-		timeBtn.setSize(150,75);
-		timeBtn.setLocation(275,25);
-		scoreBtn = new JButton();
-		scoreBtn.setSize(150,75);
-		scoreBtn.setLocation(425,25);
-		scorePanel.add(stageBtn);
-		scorePanel.add(timeBtn);
-		scorePanel.add(scoreBtn);
-		scorePanel.revalidate();
-		scorePanel.repaint();
-		
-		//progressbar 리셋 필요
-		
-	}
-
-	//
-	public void initializeGamePanel() {
-		// 메인화면으로 돌아가기
-		// 게임 중이지 않을때의 초기화면 필요
-		// (게임명이라던가 단순한 이미지 뿌리기라던가...)
-		colorPanel.removeAll();
-		colorPanel.revalidate();
-		colorPanel.repaint();
-		
-		scorePanel.removeAll();
-		scorePanel.revalidate();
-		scorePanel.repaint();
-		
-		progressbarPanel.removeAll();
-		progressbarPanel.revalidate();
-		progressbarPanel.repaint();
-	}
-	
-	// 내부클래스로 startButton 이벤트 처리  
-	private class startButtonActionListener implements ActionListener {  
-		@Override  
-		public void actionPerformed(ActionEvent e) {  
-			setStartTime(e.getWhen());
-			mainFrame.resetGamePanel(2);
-			
-	 	}  
-	}  
-	
-	
 }

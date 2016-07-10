@@ -1,178 +1,102 @@
 package view;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
-import javax.imageio.ImageIO;
-import controller.Controller;
+import javax.swing.event.*;
 
-public class ButtonView extends JFrame {
 
+public class ButtonView extends JPanel{
+	private JPanel buttonPanel;
 	private JToggleButton startBtn;
 	private JButton exitBtn;
 
-	private int level = 1;
-	private int score = 0;
+	public Component makeButtonView() {
 
-	private static long startTime; // 전달값, 마지막 일시정지를 풀었을 타임
-	private static long playTime; // 전달값, 일시정지이전의 플레이타임
-	private long pauseTime; // 일시정지했던 시간
-	private long endTime; // 전달값, 마지막 종료시간
+		buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout());
+		buttonPanel.setSize(300, 200);
+		
+		//스타트 버튼...
 
-	public ButtonView() {	}
-
-	
-	//getter and setter
-	public int getLevel() {
-		return level;
-	}
-
-	public int getScore() {
-		return score;
-	}
-
-	public long getStartTime() {
-		return startTime;
-	}
-
-	public long getPauseTime() {
-		return pauseTime;
-	}
-
-	public long getPlayTime() {
-		return playTime;
-	}
-
-	public long getEndTime() {
-		return endTime;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	public void setScore(int score) {
-		this.score = score;
-	}
-
-	public void setStartTime(long startTime) {
-		this.startTime = startTime;
-	}
-
-	public void setPauseTime(long pauseTime) {
-		this.pauseTime = pauseTime;
-	}
-
-	public void setPlayTime(long playTime) {
-		this.playTime = playTime;
-	}
-
-	public void setEndTime(long endTime) {
-		this.endTime = endTime;
-	}
-
-	
-	
-	
-	public JButton makeExitButton() { //Exit버튼 클릭시 게임 종료
-		MainFrame main = new MainFrame();
+		 startBtn = new JToggleButton();
+		 
+		  try {
+		    Image tempStartImg = ImageIO.read(new File("image/play.png"));
+		    Image startImg = tempStartImg.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+		    startBtn.setIcon(new ImageIcon(startImg));
+		    
+		    Image tempPauseImg = ImageIO.read(new File("image/pause.png"));
+		    Image pauseImg = tempPauseImg.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+		    startBtn.setSelectedIcon(new ImageIcon(pauseImg));
+		  } catch (Exception e) {
+		  }
+		  
 		exitBtn = new JButton("Exit");
-		exitBtn.setPreferredSize(new Dimension(200, 100));
-		exitBtn.addActionListener(new ActionEventExitHandler(main));
-		return exitBtn;
-	}
-
-	public JToggleButton makeStartButton() { //게임의 시작 혹은 일시정지
+		exitBtn.setPreferredSize(new Dimension(125, 110));
+		exitBtn.setFont(new Font("Arial", Font.PLAIN, 40));
+		
 		MainFrame main = new MainFrame();
-		startBtn = new JToggleButton();
-		startBtn.setBackground(Color.blue);
-		startBtn.addActionListener(new ActionEventStartHandler(main));
-		try {
-			Image tempStartImg = ImageIO.read(new File("image/play.png"));
-			Image StartImg = tempStartImg.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
-			startBtn.setIcon(new ImageIcon(StartImg));
+		startBtn.addActionListener(new ActionStartEventHandler(main));
+		exitBtn.addActionListener(new ActionEventHandler(main));
 
-			Image tempPauseImg = ImageIO.read(new File("image/pause.png"));
-			Image PauseImg = tempPauseImg.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
-			startBtn.setSelectedIcon(new ImageIcon(PauseImg));
-		} catch (Exception e) {
-		}
-
-		return startBtn;
+		buttonPanel.add(startBtn);
+		buttonPanel.add(exitBtn);
+		
+		return buttonPanel;
 	}
 }
 
-class ActionEventStartHandler implements ActionListener {
-
-	private JFrame parent;
-
-	private boolean pause = false;
-	private long tempPlayTime = 0;
-
-	public ActionEventStartHandler(JFrame parent) {
-		this.parent = parent;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) { //게임 start and pause
-
-		ButtonView buttonView = new ButtonView();
-		if (pause) {
-			// 게임 중에 pause 기능
-			pause = false;
-			buttonView.setPauseTime(e.getWhen());
-			tempPlayTime += (buttonView.getPauseTime() - buttonView.getStartTime());
-			buttonView.setPlayTime(tempPlayTime);
-			
-			//게임 작동 확인
-			SimpleDateFormat sdf = new SimpleDateFormat("mm분 ss.SSS초");
-			System.out.println("멈춤");			
-			System.out.println("pauseTime : " + (buttonView.getPauseTime()));
-			System.out.println("지난 스타트타임" + buttonView.getStartTime());
-			System.out.println("플레이타임 : " + sdf.format(buttonView.getPlayTime()));
-			// 테스트용 현재시간 추출
-			// 테스트용 현지시간 출력= e.getWhen();
-			// 특정 메서드에 현재시간 전달
-
-		} else { 
-			//게임 시작
-			pause = true;
-			buttonView.setStartTime(e.getWhen());
-			
-			//게임 작동 확인
-			System.out.println("스타트");
-			System.out.println("스타트시간" + buttonView.getStartTime());
-			// startTime, playTime-전달
-			// 특정 메서드에 현재시간 전달
+	class ActionEventHandler implements ActionListener {
+	
+		private JFrame parent;
+		
+		public ActionEventHandler(JFrame parent){
+			this.parent = parent;
 		}
-
+		
+		@Override
+		public void actionPerformed(ActionEvent e){
+	
+				int result = JOptionPane.showConfirmDialog(parent, "정말 종료하시겠습니까?");
+				
+				if(result == JOptionPane.YES_OPTION){
+					System.exit(0); 
+				}else{
+				}
+		}
 	}
-
-}
-
-class ActionEventExitHandler implements ActionListener {
+	
+	
+	class ActionStartEventHandler implements ActionListener {
 	private JFrame parent;
-
-	public ActionEventExitHandler(MainFrame parent) {
+	
+	public ActionStartEventHandler(JFrame parent){
 		this.parent = parent;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		ButtonView buttonview = new ButtonView();
-		e.getActionCommand();
-		int result = JOptionPane.showConfirmDialog(parent, "정말 종료하시겠습니까?", "종료 확인", JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE);
+		ButtonView buttonView = new ButtonView();
+		boolean pause = false;
+		if (pause) {
+			// 게임 중에 pause 기능
+			pause = false;
+			System.out.println("멈춤");			
+			System.out.println("일시정시 시작" + e.getWhen());
 
-		if (result == JOptionPane.YES_OPTION) {
-			System.exit(0);
-		} else if (result == JOptionPane.NO_OPTION) {
-		}
+		} else {
+			// 여기부터 게임 시작
+			System.out.println("스타트");
+			pause = true;
+			System.out.println("게임 시작 혹은 재시작 " + e.getWhen());
+			
+		}		
 	}
+
 }
+	
