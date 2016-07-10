@@ -17,19 +17,18 @@ public class ButtonView extends JFrame {
 	private JToggleButton startBtn;
 	private JButton exitBtn;
 
-	
 	private int level = 1;
 	private int score = 0;
 
-	private static long startTime;
-	private static long playTime;
-	private long pauseTime;
-	private long endTime;
+	private static long startTime; // 전달값, 마지막 일시정지를 풀었을 타임
+	private static long playTime; // 전달값, 일시정지이전의 플레이타임
+	private long pauseTime; // 일시정지했던 시간
+	private long endTime; // 전달값, 마지막 종료시간
+
+	public ButtonView() {	}
 
 	
-	
-	public ButtonView() {
-	}
+	//getter and setter
 	public int getLevel() {
 		return level;
 	}
@@ -37,8 +36,8 @@ public class ButtonView extends JFrame {
 	public int getScore() {
 		return score;
 	}
-	
-	public static long getStartTime() {
+
+	public long getStartTime() {
 		return startTime;
 	}
 
@@ -49,9 +48,11 @@ public class ButtonView extends JFrame {
 	public long getPlayTime() {
 		return playTime;
 	}
+
 	public long getEndTime() {
 		return endTime;
 	}
+
 	public void setLevel(int level) {
 		this.level = level;
 	}
@@ -71,12 +72,15 @@ public class ButtonView extends JFrame {
 	public void setPlayTime(long playTime) {
 		this.playTime = playTime;
 	}
+
 	public void setEndTime(long endTime) {
 		this.endTime = endTime;
 	}
+
 	
 	
-	public JButton makeExitButton() {
+	
+	public JButton makeExitButton() { //Exit버튼 클릭시 게임 종료
 		MainFrame main = new MainFrame();
 		exitBtn = new JButton("Exit");
 		exitBtn.setPreferredSize(new Dimension(200, 100));
@@ -84,7 +88,7 @@ public class ButtonView extends JFrame {
 		return exitBtn;
 	}
 
-	public JToggleButton makeStartButton() {
+	public JToggleButton makeStartButton() { //게임의 시작 혹은 일시정지
 		MainFrame main = new MainFrame();
 		startBtn = new JToggleButton();
 		startBtn.setBackground(Color.blue);
@@ -116,41 +120,41 @@ class ActionEventStartHandler implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) { //게임 start and pause
 
 		ButtonView buttonView = new ButtonView();
 		if (pause) {
 			// 게임 중에 pause 기능
-			SimpleDateFormat sdf = new SimpleDateFormat("mm분 ss.SSS초");
-			System.out.println("멈춤");
 			pause = false;
 			buttonView.setPauseTime(e.getWhen());
-			System.out.println("pauseTime : " + (buttonView.getPauseTime()));
-			System.out.println("지난 스타트타임" + buttonView.getStartTime());
-			
 			tempPlayTime += (buttonView.getPauseTime() - buttonView.getStartTime());
 			buttonView.setPlayTime(tempPlayTime);
+			
+			//게임 작동 확인
+			SimpleDateFormat sdf = new SimpleDateFormat("mm분 ss.SSS초");
+			System.out.println("멈춤");			
+			System.out.println("pauseTime : " + (buttonView.getPauseTime()));
+			System.out.println("지난 스타트타임" + buttonView.getStartTime());
 			System.out.println("플레이타임 : " + sdf.format(buttonView.getPlayTime()));
 			// 테스트용 현재시간 추출
 			// 테스트용 현지시간 출력= e.getWhen();
 			// 특정 메서드에 현재시간 전달
 
-		} else {
-			// 여기부터 게임 시작
-			System.out.println("스타트");
+		} else { 
+			//게임 시작
 			pause = true;
 			buttonView.setStartTime(e.getWhen());
+			
+			//게임 작동 확인
+			System.out.println("스타트");
 			System.out.println("스타트시간" + buttonView.getStartTime());
 			// startTime, playTime-전달
-			// 마지막 완료시에 playTime += listTime - startTime;
 			// 특정 메서드에 현재시간 전달
 		}
 
 	}
 
 }
-
-
 
 class ActionEventExitHandler implements ActionListener {
 	private JFrame parent;
@@ -172,4 +176,3 @@ class ActionEventExitHandler implements ActionListener {
 		}
 	}
 }
-
