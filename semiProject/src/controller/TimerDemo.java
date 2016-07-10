@@ -43,7 +43,7 @@ public class TimerDemo extends Thread{
  
   public static void main(String args[]) {
     System.out.println("게임 시작");
-    new TimerDemo(50);
+    new TimerDemo(10);
     
     
   }
