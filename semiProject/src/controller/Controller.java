@@ -12,7 +12,7 @@ public class Controller {
 		totalPlayTime +=(pauseTime - startTime); 
 		
 		//		    주어진시간	     clear에 소요시간               clear 당시 레벨
-		//score += (15-(clearTime-startTime))*level
+		score -= ((15-(totalPlayTime))*level)/1000;
 		
 		return score;
 		
