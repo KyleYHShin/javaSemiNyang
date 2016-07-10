@@ -10,26 +10,36 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.imageio.ImageIO;
-import controller.Controller;
+import controller.Button;
+import controller.ColorStageScore;
 
 public class ButtonView extends JFrame {
-
 	private JToggleButton startBtn;
 	private JButton exitBtn;
-
+	private JPanel scorePanel;
+	private JPanel progressbarPanel;
 	
 	private int level = 1;
 	private int score = 0;
-
-	private static long startTime;
-	private static long playTime;
-	private long pauseTime;
-	private long endTime;
+	private double totalScore = 0;
+	private double startTime;
+	private double playTime;
+	private double pauseTime;
+	private double endTime;
 
 	
 	
 	public ButtonView() {
 	}
+	
+	public double getTotalScore() {
+		return totalScore;
+	}
+
+	public void setTotalScore(double totalScore) {
+		this.totalScore = totalScore;
+	}
+	
 	public int getLevel() {
 		return level;
 	}
@@ -38,21 +48,7 @@ public class ButtonView extends JFrame {
 		return score;
 	}
 	
-	public static long getStartTime() {
-		return startTime;
-	}
-
-	public long getPauseTime() {
-		return pauseTime;
-	}
-
-	public long getPlayTime() {
-		return playTime;
-	}
-	public long getEndTime() {
-		return endTime;
-	}
-	public void setLevel(int level) {
+		public void setLevel(int level) {
 		this.level = level;
 	}
 
@@ -60,20 +56,63 @@ public class ButtonView extends JFrame {
 		this.score = score;
 	}
 
-	public void setStartTime(long startTime) {
+	
+	public double getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(double startTime) {
 		this.startTime = startTime;
 	}
 
-	public void setPauseTime(long pauseTime) {
+	public double getPlayTime() {
+		return playTime;
+	}
+
+	public void setPlayTime(double playTime) {
+		this.playTime = playTime;
+	}
+
+	public double getPauseTime() {
+		return pauseTime;
+	}
+
+	public void setPauseTime(double pauseTime) {
 		this.pauseTime = pauseTime;
 	}
 
-	public void setPlayTime(long playTime) {
-		this.playTime = playTime;
+	public double getEndTime() {
+		return endTime;
 	}
-	public void setEndTime(long endTime) {
+
+	public void setEndTime(double endTime) {
 		this.endTime = endTime;
 	}
+
+	public JPanel makeScorePanel(){
+		
+		scorePanel = new JPanel();
+		scorePanel.setLayout(null);
+		scorePanel.setSize(700, 100);
+		scorePanel.setLocation(0, 0);
+		scorePanel.setBackground(Color.ORANGE);
+		return scorePanel;
+	}
+
+	
+public JPanel MakeProgressbarPanel(){
+	
+	progressbarPanel = new JPanel();
+
+	progressbarPanel.setLayout(null);
+	progressbarPanel.setSize(700, 150);
+	progressbarPanel.setLocation(0, 700);
+	progressbarPanel.setBackground(Color.RED);
+return progressbarPanel;
+}
+	
+	
+	
 	
 	
 	public JButton makeExitButton() {
@@ -81,6 +120,7 @@ public class ButtonView extends JFrame {
 		exitBtn = new JButton("Exit");
 		exitBtn.setPreferredSize(new Dimension(200, 100));
 		exitBtn.addActionListener(new ActionEventExitHandler(main));
+		
 		return exitBtn;
 	}
 
@@ -89,6 +129,8 @@ public class ButtonView extends JFrame {
 		startBtn = new JToggleButton();
 		startBtn.setBackground(Color.blue);
 		startBtn.addActionListener(new ActionEventStartHandler(main));
+		ColorStageScore colorPanel = new ColorStageScore();
+		startBtn.addActionListener(new startButtonActionListener());
 		try {
 			Image tempStartImg = ImageIO.read(new File("image/play.png"));
 			Image StartImg = tempStartImg.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
@@ -171,5 +213,24 @@ class ActionEventExitHandler implements ActionListener {
 		} else if (result == JOptionPane.NO_OPTION) {
 		}
 	}
+	  
+	}
+  
+// 내부클래스로 startButton 이벤트 처리  
+class startButtonActionListener implements ActionListener {  
+	@Override  
+	public void actionPerformed(ActionEvent e) {  
+		ButtonView buttonView = new ButtonView();
+		MainFrame mainFrame = new MainFrame();
+		if(buttonView.getStartTime()==0){
+		ColorStageScore colorPanel = new ColorStageScore(); 
+		mainFrame.resetGamePanel(2);
+		
+		buttonView.setStartTime(0.001);
+		}
+		
+		
+ 	}  
 }
+
 
