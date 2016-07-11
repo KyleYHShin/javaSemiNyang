@@ -6,9 +6,41 @@ import javax.swing.*;
 public class GameView extends JPanel{
 	private JPanel gamePanel;
 	private JPanel scorePanel;
-	private JPanel colorPanel;
+	private JPanel screenPanel;
 	private JPanel progressbarPanel;
 	
+	public JPanel getGamePanel() {
+		return gamePanel;
+	}
+
+	public void setGamePanel(JPanel gamePanel) {
+		this.gamePanel = gamePanel;
+	}
+
+	public JPanel getScorePanel() {
+		return scorePanel;
+	}
+
+	public void setScorePanel(JPanel scorePanel) {
+		this.scorePanel = scorePanel;
+	}
+
+	public JPanel getScreenPanel() {
+		return screenPanel;
+	}
+
+	public void setScreenPanel(JPanel screenPanel) {
+		this.screenPanel = screenPanel;
+	}
+
+	public JPanel getProgressbarPanel() {
+		return progressbarPanel;
+	}
+
+	public void setProgressbarPanel(JPanel progressbarPanel) {
+		this.progressbarPanel = progressbarPanel;
+	}
+
 	public Component makeGameView(){
 	
 	gamePanel = new JPanel();
@@ -23,11 +55,11 @@ public class GameView extends JPanel{
 	scorePanel.setLocation(0, 0);
 	scorePanel.setBackground(Color.ORANGE);
 
-	colorPanel = new JPanel();
+	screenPanel = new JPanel();
 	this.setLayout(null);
-	colorPanel.setPreferredSize(new Dimension(600, 600));
-	colorPanel.setLocation(50, 100);
-	colorPanel.setBackground(Color.BLACK);
+	screenPanel.setPreferredSize(new Dimension(600, 600));
+	screenPanel.setLocation(50, 100);
+	screenPanel.setBackground(Color.BLACK);
 
 	progressbarPanel = new JPanel();
 	this.setLayout(null);
@@ -36,7 +68,7 @@ public class GameView extends JPanel{
 	progressbarPanel.setBackground(Color.RED);
 
 	gamePanel.add(scorePanel);
-	gamePanel.add(colorPanel);
+	gamePanel.add(screenPanel);
 	gamePanel.add(progressbarPanel);
 	
 	return gamePanel;

@@ -9,6 +9,8 @@ import java.io.File;
 
 import javax.swing.event.*;
 
+import controller.GameController;
+
 
 public class ButtonView extends JPanel{
 	private JPanel buttonPanel;
@@ -95,6 +97,7 @@ public class ButtonView extends JPanel{
 			pause = true;
 			System.out.println("게임 시작 혹은 재시작 " + e.getWhen());
 			
+			new GameController().resetGamePanel();
 		}		
 	}
 

@@ -12,11 +12,12 @@ import java.util.*;
 import view.*;
 
 public class GameController extends JPanel {
-	private JPanel colorPanel;
-	private MainFrame mainFrame;
-	// 시작 레벨
+	
 	private int level = 1;
-	long totalscore =0;
+	private long totalscore = 0;
+	private GameView gameView;
+	private JPanel gameScreenPanel;
+	
 	public int getLevel() {
 		return level;
 	}
@@ -25,21 +26,20 @@ public class GameController extends JPanel {
 		this.level = level;
 	}
 
-	public JPanel makeColorPanel(int newLevel, MainFrame getFrame) {
+	public long getTotalscore() {
+		return totalscore;
+	}
+
+	public void setTotalscore(long totalscore) {
+		this.totalscore = totalscore;
+	}
+	public JPanel makeGameScreenPanel(int newLevel) {
 		this.level = newLevel;
-		// 기존에 있는 메인프레임 레퍼런스 저장
-		this.mainFrame = getFrame;
-		// 게임용 패널 재생성
-		colorPanel = new JPanel();
-		colorPanel.setSize(600, 600);
-		colorPanel.setLocation(0, 0);
-		colorPanel.setLayout(new GridLayout(level, level));
-		//////////////////////////////////////////////////////
-		// 일정레벨 이상일 때 칸 갯수 더이상 증가 못하게
-		// 색상 변경 알고리즘 추가-> Btn[i].setBackground(Color.BLACK);
-		//
-		//////////////////////////////////////////////////////
-		// 버튼 갯수 초기화
+		gameScreenPanel = new JPanel();
+		gameScreenPanel.setSize(600, 600);
+		gameScreenPanel.setLocation(0, 0);
+		gameScreenPanel.setLayout(new GridLayout(level, level));
+		
 		JButton[] Btn = new JButton[level * level];
 		// 정답버튼 결정
 		Random r = new Random();
@@ -52,28 +52,25 @@ public class GameController extends JPanel {
 			Btn[i] = new JButton();
 
 			if (i == answer) {
-				// 버튼에 있는 text 안보이게 설정 필요
-
+				
 				Btn[i].setBackground(Color.BLACK);
 				Btn[i].addActionListener(btnListener1);
 			} else {
 
 				Btn[i].setBackground(Color.YELLOW);
 				Btn[i].addActionListener(btnListener2);
-				ButtonView bv = new ButtonView();
-
-				// 끝냈을 때 이벤트 연동 필요
+				
 			}
-			colorPanel.add(Btn[i]);
+			gameScreenPanel.add(Btn[i]);
 		}
-		return colorPanel;
+		return gameScreenPanel;
 	}
 
-	// 내부클래스로 Button 이벤트 처리
+	
 	private class GameButtonActionListener1 implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			SimpleDateFormat sdf = new SimpleDateFormat("ss.SSS");
+			/*SimpleDateFormat sdf = new SimpleDateFormat("ss.SSS");
 			//각 스테이지 계산 처리는 되는데 합산이 안됨
 			e.getActionCommand();
 			long clearTime = e.getWhen();
@@ -87,23 +84,17 @@ public class GameController extends JPanel {
 			level++;
 			System.out.println("점수 : " + getTotalscore());
 			// 기존에 있는 메인프레임의 화면갱신 메서드(resetGamePanel()) 호출
-			mainFrame.resetGamePanel(level);
+			mainFrame.resetGamePanel(level);*/
 		}
 
 	}
 
-	public long getTotalscore() {
-		return totalscore;
-	}
-
-	public void setTotalscore(long totalscore) {
-		this.totalscore = totalscore;
-	}
+	
 
 	class GameButtonActionListener2 implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
+/*
 			ButtonView buttonview = new ButtonView();
 			e.getActionCommand();
 
@@ -128,27 +119,25 @@ public class GameController extends JPanel {
 				// 서버로 전송
 
 			}
-
+*/
 		}
 	}
 
 	
-	public void resetGamePanel(int level) {
+	public void resetGamePanel() {
 		
-		GameColorPanel gcp = new GameColorPanel();
-		// 패널에 있는 객체들 모두 삭제
-		colorPanel.removeAll();
-		// 새 객체(패널) 생성하여 추가
-		colorPanel.add(gcp.makeColorPanel(level, this));
-		colorPanel.revalidate();
-		colorPanel.repaint();
+		
+		gameView.setScreenPanel(makeGameScreenPanel(2));
+		
+		gameScreenPanel.revalidate();
+		gameScreenPanel.repaint();
 		
 		
 	}
 
 	//
 	public void initializeGamePanel() {
-		// 메인화면으로 돌아가기
+		/*// 메인화면으로 돌아가기
 		// 게임 중이지 않을때의 초기화면 필요
 		// (게임명이라던가 단순한 이미지 뿌리기라던가...)
 		colorPanel.removeAll();
@@ -156,5 +145,6 @@ public class GameController extends JPanel {
 		colorPanel.repaint();
 		
 	}
-	
+	*/
+	}
 }
