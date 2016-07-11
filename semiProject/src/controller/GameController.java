@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.*;
 import view.*;
 
-public class GameColorPanel extends JPanel {
+public class GameController extends JPanel {
 	private JPanel colorPanel;
 	private MainFrame mainFrame;
 	// 시작 레벨
@@ -131,4 +131,30 @@ public class GameColorPanel extends JPanel {
 
 		}
 	}
+
+	
+	public void resetGamePanel(int level) {
+		
+		GameColorPanel gcp = new GameColorPanel();
+		// 패널에 있는 객체들 모두 삭제
+		colorPanel.removeAll();
+		// 새 객체(패널) 생성하여 추가
+		colorPanel.add(gcp.makeColorPanel(level, this));
+		colorPanel.revalidate();
+		colorPanel.repaint();
+		
+		
+	}
+
+	//
+	public void initializeGamePanel() {
+		// 메인화면으로 돌아가기
+		// 게임 중이지 않을때의 초기화면 필요
+		// (게임명이라던가 단순한 이미지 뿌리기라던가...)
+		colorPanel.removeAll();
+		colorPanel.revalidate();
+		colorPanel.repaint();
+		
+	}
+	
 }
