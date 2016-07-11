@@ -18,6 +18,14 @@ public class GameController extends JPanel {
 	private GameView gameView;
 	private JPanel gameScreenPanel;
 	
+	public GameController(GameView gameView) {
+		this.gameView = gameView;
+	}
+
+	public GameController() {
+		
+	}
+
 	public int getLevel() {
 		return level;
 	}
@@ -123,19 +131,17 @@ public class GameController extends JPanel {
 		}
 	}
 
-	
-	public void resetGamePanel() {
+public void resetGamePanel(){
 		
-		
-		gameView.setScreenPanel(makeGameScreenPanel(2));
-		
-		gameScreenPanel.revalidate();
-		gameScreenPanel.repaint();
+	   // gameView.getScreenPanel().removeAll();
+		gameView.setScreenPanel(new GameController().makeGameScreenPanel(2));
+		//gameView.getScreenPanel().revalidate();
+		//gameView.getScreenPanel().repaint();
 		
 		
 	}
 
-	//
+	
 	public void initializeGamePanel() {
 		/*// 메인화면으로 돌아가기
 		// 게임 중이지 않을때의 초기화면 필요

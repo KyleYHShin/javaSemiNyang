@@ -16,6 +16,7 @@ public class ButtonView extends JPanel{
 	private JPanel buttonPanel;
 	private JToggleButton startBtn;
 	private JButton exitBtn;
+	private GameView gameView;
 
 	public Component makeButtonView() {
 

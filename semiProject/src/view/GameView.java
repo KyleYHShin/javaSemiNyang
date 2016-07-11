@@ -3,11 +3,17 @@ package view;
 import java.awt.*;
 import javax.swing.*;
 
+import controller.GameController;
+
 public class GameView extends JPanel{
 	private JPanel gamePanel;
 	private JPanel scorePanel;
 	private JPanel screenPanel;
 	private JPanel progressbarPanel;
+	
+	public GameView(){
+		GameController gameController = new GameController(this);
+	} 
 	
 	public JPanel getGamePanel() {
 		return gamePanel;
@@ -72,5 +78,6 @@ public class GameView extends JPanel{
 	gamePanel.add(progressbarPanel);
 	
 	return gamePanel;
-	}
+	}	
+
 }
