@@ -1,16 +1,15 @@
 package controller.game;
 
+import javax.swing.JOptionPane;
+
 import model.Linker;
-import view.MainFrame;
-import view.game.GameTop;
-import view.game.GameMid;
 
 public class GameController {
 	// 각 객체 노드 저장
 	private Linker link;
 
-	private final int DURATION = 10; // 화면 갱신 시간
-	private final int TIME_LIMIT = 5000;// 게임 제한 시간
+	private final int DURATION = 10; // 화면 갱신 시간(0.01초)
+	private final int TIME_LIMIT = 10000;// 게임 제한 시간
 
 	private final int WRONG_ANSWER = 0; // 오답
 	private final int TIMES_UP = 1; // 시간초과
@@ -25,9 +24,11 @@ public class GameController {
 	private long endTime;
 	private long remainTime;
 
+	private int topScore[];
+
+	// 유저 데이터
 	private int level;
 	private int score;
-	private int topScore[];
 
 	Thread game; // 쓰레드
 
@@ -36,8 +37,10 @@ public class GameController {
 		this.link.setGameController(this);
 
 		// ■■■ 임시 : 레벨별 최대 점수 ■■■
-		topScore = new int[] { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600,
-				1700, 1800, 1900, 2000 };
+		topScore = new int[] { 100, 200, 300, 400, 500, 600, 700, 800,
+					1000, 1200, 1400, 1600, 1800,
+					2200, 2600, 3000, 3400, 3800, 
+					5000, 6000 };
 	}
 
 	// 시작 버튼에 대한 처리
@@ -45,13 +48,16 @@ public class GameController {
 		// start : 처음 시작하는 경우
 		if (!started) {
 			startNewGame();
+			link.getGameBot().setFire();
 		}
 		// pause & restart : 이미 게임이 시작된 상태에서 버튼 클릭시
 		else {
 			if (InGame) {
 				pauseSignal();
+				link.getGameBot().disFire();
 			} else {
 				restartSignal();
+				link.getGameBot().setFire();
 			}
 		}
 	}
@@ -64,11 +70,8 @@ public class GameController {
 		level = 1;
 		score = 0;
 
-		// ■■■ GameTop 초기화
-		// ■■■ gameTop.setValues(level, score);
-
 		// 게임 시작
-		start(level);
+		stageStart(level);
 	}
 
 	// startSignal 2 : 일시정지
@@ -93,41 +96,44 @@ public class GameController {
 		endTime = startTime + remainTime;
 
 		// GameMid JPanel에 임시저장해놓은 이전 화면 세팅
-		link.getGameView().resetPreMid();
+		link.getGameView().setMidPre();
 
 		// game 재시작(스레드 생성하여 시작)
 		game = new Thread(new gameTimerThread());
 		game.start();
-
-		// System.out.println("일시정지");
-		// System.out.println("남은시간 : " + remainTime);
 	}
 
-	// 게임 시작 메서드
-	private void start(int newLevel) {
+	// 게임(해당 level) 시작
+	private void stageStart(int newLevel) {
 		// 시작 & 종료 시간값 설정
 		startTime = System.currentTimeMillis();
 		endTime = startTime + TIME_LIMIT;
 
 		// 스레드 생성
 		game = new Thread(new gameTimerThread());
-		// GameMid JPanel에 게임화면 세팅
-		link.getGameView().resetMidLevel(newLevel);
-		// link.getGameMid().setLevelScreen(newLevel);
+
+		// GameTop 초기화
+		link.getGameTop().setStage(level, score);
+		// GameMid 초기화(게임화면 세팅)
+		link.getGameView().setMidLevel(newLevel);
+
 		// game(스레드) 시작
 		game.start();
 	}
 
 	// 정답 선택시
 	public void clearLevel(long clickTime) {
-		// 1. 게임(스레드) 정지
+		// 1. 게임(해당 level=스레드) 정지
 		game.interrupt();
 
 		// 2. 점수 갱신
 		remainTime = endTime - clickTime;
-		System.out.println(remainTime);
-		score += ((double) remainTime / (double) TIME_LIMIT) * topScore[level - 1];
-		
+		int stageScore = (int)(((double) remainTime / (double) TIME_LIMIT) * topScore[level - 1]);
+		System.out.println("Stage Score : " + stageScore);
+		score += stageScore;
+		System.out.println("Total Score : " + score);
+		link.getGameTop().setStage(level, score);
+
 		// 3-1. 최고레벨 클리어시
 		if (level >= FINAL_LEVEL)
 			endGame(CLEAR_GAME);
@@ -135,12 +141,8 @@ public class GameController {
 		// 3-2. 레벨 갱신
 		else {
 			level++;
-			// GameMid
-			// ■■■ 4. GameTop에 갱신된 점수와 레벨 업로드
-			// ■■■ gameTop.setValues(level, score);
-
-			// 5. 새게임 시작
-			start(level);
+			// 새 게임(올라간 level) 시작
+			stageStart(level);
 		}
 	}
 
@@ -150,30 +152,61 @@ public class GameController {
 		// 쓰레드 종료
 		game.interrupt();
 
-		String message;
-		if (reason == WRONG_ANSWER)
-			message = "오답";
-		else if (reason == TIMES_UP)
-			message = "시간초과";
-		else if (reason == CLEAR_GAME)
-			message = "게임 클리어";
-		else
-			message = "ERROR : Wrong Value";
-
 		// 게임용 변수들 초기화
 		started = false; // 존재하는 게임이 있는지 확인
 		InGame = false;// 기존에 있는 게임이 실행중인지 확인
 
-		// GameMid JPanel을 default 화면으로 설정
-		link.getGameMid().setDefaultScreen();
-		// ■■■ 4.GameTop 초기화(-> 프로그레스바 초기화)
-		// ■■■ 5.MainFrame에 점수 업로드창 띄우기
-		// mainFrame.임시창 띄우기(message, score);(->이벤트 핸들러)
+		String message;
+		if (reason == WRONG_ANSWER) {
+			message = "오답";
+			link.getGameView().setMidFail(score);
+		} else if (reason == TIMES_UP) {
+			message = "시간초과";
+			link.getGameView().setMidFail(score);
+		} else if (reason == CLEAR_GAME) {
+			message = "게임 클리어";
+			link.getGameView().setMidSuccess(score);
+		} else
+			message = "ERROR : Wrong Value";
+
+		// GameBot 초기화(프로그레스바)
+		link.getGameBot().setTime(0, TIME_LIMIT);
+		link.getGameBot().disFire();
+
+		// MainFrame에 점수 업로드창 띄우기
+		endMessage();
 
 		// MainFrame의 시작버튼 초기화
+		link.getButtonView().setRefreshStartButton();
 		System.out.println("GameController : 게임종료(" + message + ")");
-		link.getGameView().setMidDefault();
-		link.getMainFrame().getButtonView().setRefreshStartButton();
+	}
+
+	// 게임 종료 후 점수 업로드 확인창
+	private void endMessage() {
+		String endMsg = "점수 : " + score + "\n저장하시겠습니까?";
+
+		if (JOptionPane.showConfirmDialog(link.getMainFrame(), endMsg, "Upload",
+				JOptionPane.OK_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+			// 문자열 입력창
+			String nickName = "";
+			while (true) {
+				nickName = JOptionPane.showInputDialog("닉네임을 입력해주세요.");
+				// 취소 선택시
+				if (nickName == null) {
+					System.out.println("저장취소");
+					break;
+				}
+				// 특정값을 입력하고 확인 선택시
+				if (!nickName.equals("") && nickName != null) {
+					// 서버에 기록 전송후 랭크뷰의 메인 테이블 갱신
+					link.getRankView().getRankController().updateNewUser(nickName, score, System.currentTimeMillis());
+					// 같은 닉네임으로 기록검색&정렬 서브테이블 갱신
+					link.getRankView().updateMyTable(nickName);
+					System.out.println("저장완료");
+					break;
+				}
+			}
+		}
 	}
 
 	// 게임(스레드)
@@ -186,7 +219,8 @@ public class GameController {
 					Thread.sleep(DURATION);
 					// 남은 시간 계속 전송
 					remainTime = endTime - System.currentTimeMillis();
-					// ■■■ gameTop.setTime(remainTime);
+					link.getGameTop().setRemainTime(remainTime);
+					link.getGameBot().setTime(remainTime, TIME_LIMIT);
 
 					// 시간초과
 					if (remainTime <= 0) {

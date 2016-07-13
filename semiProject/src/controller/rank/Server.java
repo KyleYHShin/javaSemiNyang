@@ -1,38 +1,47 @@
 package controller.rank;
 
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Vector;
 
 import model.User;
 
 public class Server {
-	// 명령어 상수
 	private final String CHECK_GET = "get";
-	// 서버 포트번호와 서버의 IP주소 설정
+	private final String FILE_PATH = "userData.dat";
 	private final int PORT = 2323;
+	private final int SAVE_TERM = 60000;
+
 	private ServerSocket server;
 	// 소켓관리 벡터
-	Vector<Socket> sManager = new Vector<Socket>(); 
-
+	private Vector<Socket> sManager = new Vector<Socket>();
 	// 데이터
-	private List<User> users;
+	private ArrayList<User> users;
 
 	public Server() {
 		// 유저 데이터 파일 읽어오기
 		loadUserData();
+	}
 
-//		users = new ArrayList<User>();
+	// test
+	public void print() {
+		for (User u : users)
+			System.out.println(u);
 	}
 
 	public void startServer() {
+		Auto_Save fileSaver = new Auto_Save(/* users */);
 		try {
+			// 자동 저장 스레드 실행
+			fileSaver.start();
 			// 서버용 소켓 객체를 생성
 			server = new ServerSocket(PORT);
 			System.out.println("서버 : 소켓객체 생성 완료");
@@ -41,7 +50,7 @@ public class Server {
 			if (server != null) {
 				while (true) {
 					System.out.println("----------------------------");
-					// 접속 요청 수락 후 해당 클라이언트 소켓 객체 생성
+					// 접속 요청이 올때까지 무한 대기
 					Socket client = server.accept();
 					System.out.println("서버 : 클라이언트 수신, 통신시작");
 
@@ -51,16 +60,15 @@ public class Server {
 					// 소켓 관리자 리스트에 소켓을 추가한다.
 					sManager.add(client);
 					// 현재 접속하고 있는 클라이언트의 수를 화면에 출력한다.
-					System.out.println("현재 클라이언트 수: " + sManager.size());
+					System.out.println("현재 클라이언트 수 : " + sManager.size());
 				}
 			}
 		} catch (Exception e) {
-			// 에러 발생시 기존 데이터 모두 저장
-			saveUserData();
 			System.out.println(e);
 		}
 	}
 
+	// 해당 클라이언트와 통신하는 스레드
 	class Client_Thread extends Thread {
 		Socket client;
 		ObjectOutputStream oos;
@@ -75,12 +83,10 @@ public class Server {
 				// 객체통신
 				oos = new ObjectOutputStream(client.getOutputStream());
 				ois = new ObjectInputStream(client.getInputStream());
-				// test
-				System.out.println("서버 : 수신용 객체 생성 완료");
+				// System.out.println("서버 : 클라이언트용 스레드 생성");
 				// 데이터 수신
 				Object getObject;
 				while ((getObject = ois.readObject()) != null) {
-					System.out.println("서버 : 클라이언트 데이터 수신 완료");
 					if (getObject instanceof String) {
 						// Update 단순 새 데이터만 원하는 경우
 						if (((String) getObject).equals(CHECK_GET)) {
@@ -118,33 +124,66 @@ public class Server {
 		}
 	}
 
-	// ■■■■■ 저장된 파일에서 유저 데이터 읽어오기 ■■■■■
-	public void loadUserData() {
-		// test
-		System.out.println("유저 객체 로드");
-		users = new ArrayList<User>();
-		GregorianCalendar gcal;
-		users.add(new User("Kyle", 1111, new GregorianCalendar()));
-		users.add(new User("Kyle", 222, new GregorianCalendar()));
-		users.add(new User("명", 4444, new GregorianCalendar()));
-		gcal = new GregorianCalendar(2016, 6, 2);
-		users.add(new User("유화", 2390, gcal));
-		gcal = new GregorianCalendar(2016, 5, 27);
-		users.add(new User("Kyle", 2, gcal));
-		gcal = new GregorianCalendar(2016, 5, 25);
-		users.add(new User("명", 11231, gcal));
-		gcal = new GregorianCalendar(2016, 6, 1);
-		users.add(new User("이슬", 643, gcal));
-		gcal = new GregorianCalendar(2016, 6, 7);
-		users.add(new User("유화", 467, gcal));
-		gcal = new GregorianCalendar(2016, 4, 27);
-		users.add(new User("슬", 34343, gcal));
+	// 자동 데이터 저장 스레드
+	class Auto_Save extends Thread {
+
+		public void run() {
+			// 데이터 저장 객체 생성(파일 덮어씌우기)
+			try {
+				while (true) {
+					System.out.println("서버 : 자동 저장 기능 실행");
+					// 특정 시간(1분)동안 sleep
+					Thread.sleep(SAVE_TERM);
+					// 데이터 저장 : 아래 선언문 위치(코드 줄번호)에 따라 오류 발생
+					// 파일을 비워놓고 입력대기 상태로 종료되니 빈파일만 생성되어 다음 파일 읽기 때 문제
+					ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH, false));
+					oos.writeObject(users);
+					oos.flush();
+					oos.close();
+					System.out.println("서버 : 자동 저장 완료");
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+			}
+		}
 	}
 
-	// ■■■■■ 유저 데이터 파일에 저장하기 ■■■■■
-	// Thread & scheduler : 특정시간을 주기로 계속 저장
-	public void saveUserData() {
-		System.out.println("데이터 저장");
+	// 저장된 파일에서 유저 데이터 읽어오기
+	public void loadUserData() {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+			users = (ArrayList) ois.readObject();
+		} catch (EOFException e) {
+			System.out.println("서버 : 유저 데이터 Load 완료");
+			print();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// // test
+		// System.out.println("유저 객체 로드");
+		// this.users = new ArrayList<User>();
+		// GregorianCalendar gcal;
+		// gcal = new GregorianCalendar(2016, 6, 2);
+		// this.users.add(new User("고양이", 2390, gcal));
+		// gcal = new GregorianCalendar(2016, 5, 28);
+		// this.users.add(new User("noPerson", 2, gcal));
+		// gcal = new GregorianCalendar(2016, 6, 5);
+		// this.users.add(new User("King", 7231, gcal));
+		// gcal = new GregorianCalendar(2016, 6, 11);
+		// this.users.add(new User("강아지", 643, gcal));
+		// gcal = new GregorianCalendar(2016, 6, 7);
+		// this.users.add(new User("noPerson", 467, gcal));
+		// gcal = new GregorianCalendar(2016, 5, 27);
+		// this.users.add(new User("고양이", 14343, gcal));
+		// System.out.println("로드완료");
 	}
 
 	public static void main(String[] args) {

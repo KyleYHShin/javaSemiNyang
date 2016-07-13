@@ -36,10 +36,8 @@ public class Client {
 			// 데이터 전송
 			oos.writeObject(sendData);
 			oos.flush();
-			// System.out.println("클라이언트 : 객체 전송 완료");
 			// 데이터 수신
 			Object getObject = ois.readObject();
-			// System.out.println("클라이언트 : 객체 수신 완료");
 			// 수신받은 데이터 변형
 			users = checkObject(getObject);
 
@@ -48,8 +46,7 @@ public class Client {
 			server.close();
 
 		} catch (ClassNotFoundException | IOException e) {
-			// ■■■■■ 데이터 통신 오류 창 출력 ■■■■■
-			System.out.println("데이터 통신 오류!!");
+			System.out.println(users);
 		}
 		return users;
 	}
@@ -58,14 +55,8 @@ public class Client {
 		List<User> users = null;
 
 		if (getObject instanceof List) {
-			// System.out.println("클라이언트 : List 형 수신");
 			users = new ArrayList<User>();
 			users.addAll((List<User>) getObject);
-			// System.out.println("Complete to get users!!");
-		} else if (getObject == null) {
-			// System.out.println("get NULL value...");
-		} else {
-			// System.out.println("get wrong Object...");
 		}
 		return (ArrayList<User>) users;
 	}

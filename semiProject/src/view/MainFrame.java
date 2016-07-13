@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Rectangle;
 
 import javax.swing.JFrame;
@@ -41,30 +40,28 @@ public class MainFrame extends JFrame {
 	public void setMainFrame() {
 		// 윈도우 창 초기화 ----------------------------------------
 		this.setTitle("반응하라! 절대 색감");
-		this.setBounds(new Rectangle(0, 0, 1000, 850));
+		this.setBounds(0, 0, 1015, 850);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLayout(null);
+		this.setResizable(false);
 		
 		gamePanel = new JPanel();
-		rankPanel = new JPanel();
-		buttonPanel = new JPanel();
-
-		gamePanel.setBounds(0, 0, 700, 850);
 		gamePanel.setLayout(null);
-		gamePanel.setBackground(Color.RED);// 테스트
+		gamePanel.setBounds(0, 0, 700, 850);
 		gamePanel.add(link.getGameView().getGameTotalPanel());
 		this.add(gamePanel);
 
-		buttonPanel.setBounds(700, 650, 300, 200);
-		buttonPanel.setBackground(Color.BLUE);
-		buttonPanel.add(buttonView.makeButtonView());
-		this.add(buttonPanel);
-
+		rankPanel = new JPanel();
 		rankPanel.setLayout(new BorderLayout());
-		rankPanel.setBounds(700, 0, 300, 650);
-		rankPanel.setBackground(Color.GREEN);
+		rankPanel.setBounds(705, 10, 285, 620);
 		rankPanel.add(rankView.makeRankView());
 		this.add(rankPanel);
+
+		buttonPanel = new JPanel();
+		buttonPanel.setLayout(null);
+		buttonPanel.setBounds(705, 650, 285, 230);
+		buttonPanel.add(buttonView.makeButtonView());
+		this.add(buttonPanel);
 
 		this.setVisible(true);
 	}
