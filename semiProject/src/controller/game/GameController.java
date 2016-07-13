@@ -127,9 +127,9 @@ public class GameController {
 		// 2. 점수 갱신
 		remainTime = endTime - clickTime;
 		int stageScore = (int) (((double) remainTime / (double) TIME_LIMIT) * topScore[level - 1]);
-		System.out.println("Stage Score : " + stageScore);
+		// System.out.println("Stage Score : " + stageScore);
 		score += stageScore;
-		System.out.println("Total Score : " + score);
+		// System.out.println("Total Score : " + score);
 		link.getGameTop().setStage(level, score);
 
 		// 3-1. 최고레벨 클리어시

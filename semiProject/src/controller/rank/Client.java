@@ -46,7 +46,7 @@ public class Client {
 			server.close();
 
 		} catch (ClassNotFoundException | IOException e) {
-			System.out.println(users);
+			System.out.println("클라이언트 : 통신오류(null 리턴)");
 		}
 		return users;
 	}

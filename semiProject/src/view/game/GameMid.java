@@ -11,7 +11,7 @@ public class GameMid extends JPanel {
 	private final ImageIcon GAME_CLEAR = new ImageIcon("image/Game_Clear.jpg");
 	private final ImageIcon GAME_OVER = new ImageIcon("image/Game_Over.jpg");
 	private final ImageIcon GAME_PAUSE = new ImageIcon("image/Game_Pause.jpg");
-	
+
 	// 각 객체 노드 저장
 	private Linker link;
 
@@ -103,7 +103,6 @@ public class GameMid extends JPanel {
 
 	// pause 화면 설정
 	public JPanel getGameScreen(int level) {
-		// 해당 화면 설정
 		middleSide = new JPanel();
 		middleSide.setBounds(50, 150, 600, 600);
 		middleSide = makeBlockPanel(level);
@@ -121,7 +120,6 @@ public class GameMid extends JPanel {
 
 	// Fail 화면 설정
 	public JPanel getFailScreen(int score) {
-		// ■■■ 해당 화면 설정 ■■■
 		middleSide = new JPanel() {
 			public void paint(Graphics g) {
 				g.drawImage(GAME_OVER.getImage(), 0, 0, null);
@@ -145,7 +143,6 @@ public class GameMid extends JPanel {
 
 	// Clear 화면 설정
 	public JPanel getSuccessScreen(int score) {
-		// ■■■ 해당 화면 설정 ■■■
 		middleSide = new JPanel() {
 			public void paint(Graphics g) {
 				g.drawImage(GAME_CLEAR.getImage(), 0, 0, null);
@@ -170,9 +167,9 @@ public class GameMid extends JPanel {
 
 	// 나뉜 블럭이 있는 화면 설정
 	private JPanel makeBlockPanel(int level) {
+		// ■■■ (현재 최대레벨 제한으로 필요 없음)일정레벨 이상일 때 칸 갯수 더이상 증가 못하게 ■■■
+
 		// level에 따른 설정
-		// ■■■ (현재 최대레벨 제한으로 필요 없음)
-		// ■■■ 일정레벨 이상일 때 칸 갯수 더이상 증가 못하게
 		int block = level / 2 + 2;
 		int blockNum = block * block;
 		int blockTerm = 25 - level;
@@ -182,24 +179,32 @@ public class GameMid extends JPanel {
 		blockPanel = new JPanel();
 		blockPanel.setLayout(new GridLayout(block, block, blockTerm, blockTerm));
 		blockPanel.setBounds(50, 150, 600, 600);
-		// blockPanel.setSize(600, 600);
 
 		// 블럭 색상 선택
+		int difColor = 10 + 100 / level;
+		int red, green, blue;
+		Color wrongColor, rightColor;
+
 		Random r = new Random();
-		int difColor = 12 + 100 / level;
-		
-		int red = r.nextInt(256 - difColor);
-		int green = r.nextInt(256 - difColor);
-		int blue = r.nextInt(256 - difColor);
-		Color wrongColor = new Color(red, green, blue);
-		Color rightColor = new Color(red + difColor, green + difColor, blue + difColor);
+		if (r.nextBoolean()) {
+			red = r.nextInt(256 - difColor);
+			green = r.nextInt(256 - difColor);
+			blue = r.nextInt(256 - difColor);
+			wrongColor = new Color(red + difColor, green + difColor, blue + difColor);
+		} else {
+			red = r.nextInt(256 - difColor) + (difColor);
+			green = r.nextInt(256 - difColor) + (difColor);
+			blue = r.nextInt(256 - difColor) + (difColor);
+			wrongColor = new Color(red - difColor, green - difColor, blue - difColor);
+		}
+		rightColor = new Color(red, green, blue);
 
 		// 버튼 갯수 초기화
 		JButton[] Btn = new JButton[blockNum];
 		// 정답버튼 결정
 		int answer = (int) (new Random().nextInt(blockNum));
 
-		// ■■■ 이벤트 연결
+		// 이벤트 연결
 		RightButtonActionListener rightBtnListener = new RightButtonActionListener();
 		WrongButtonActionListener wrongBtnListener = new WrongButtonActionListener();
 
