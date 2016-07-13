@@ -29,6 +29,7 @@ public class RankController {
 		// 업데이트 후 데이터 수신
 		data = client.getUsers(newUser);
 		if (data == null) {
+			link.getGameController().Sound("bgm/Alarm.wav", false);
 			JOptionPane.showMessageDialog(link.getMainFrame(), "통신오류!!\n데이터를 읽어 올 수 없습니다.");
 		}
 		return toObjectArray(sortUsers(selectUsers(checkedBtn, data)));

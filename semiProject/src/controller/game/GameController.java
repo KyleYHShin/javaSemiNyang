@@ -1,5 +1,11 @@
 package controller.game;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
 
 import model.Linker;
@@ -30,30 +36,44 @@ public class GameController {
 	private int level;
 	private int score;
 
-	Thread game; // 쓰레드
+	private Thread game; // 쓰레드
+	private Clip mainSound;
 
 	public GameController(Linker link) {
 		this.link = link;
 		this.link.setGameController(this);
 
-		// ■■■ 임시 : 레벨별 최대 점수 ■■■
+		// ■■■ 레벨별 최대 점수 ■■■
 		topScore = new int[] { 100, 200, 300, 400, 500, 600, 700, 800, 1000, 1200, 1400, 1600, 1800, 2200, 2600, 3000,
 				3400, 3800, 5000, 6000 };
+
+		// 배경음악 설정
+		try {
+			AudioInputStream ais = AudioSystem
+					.getAudioInputStream(new BufferedInputStream(new FileInputStream("bgm/InGame.wav")));
+			mainSound = AudioSystem.getClip();
+			mainSound.open(ais);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// 시작 버튼에 대한 처리
 	public void startSignal() {
 		// start : 처음 시작하는 경우
 		if (!started) {
+			mainSound.start();
 			startNewGame();
 			link.getGameBot().setFire();
 		}
 		// pause & restart : 이미 게임이 시작된 상태에서 버튼 클릭시
 		else {
 			if (InGame) {
+				mainSound.stop();
 				pauseSignal();
 				link.getGameBot().disFire();
 			} else {
+				mainSound.start();
 				restartSignal();
 				link.getGameBot().setFire();
 			}
@@ -149,6 +169,7 @@ public class GameController {
 	public void endGame(int reason) {
 		// 쓰레드 종료
 		game.interrupt();
+		mainSound.stop();
 
 		// 게임용 변수들 초기화
 		started = false; // 존재하는 게임이 있는지 확인
@@ -157,12 +178,15 @@ public class GameController {
 		String message;
 		if (reason == WRONG_ANSWER) {
 			message = "오답";
+			Sound("bgm/GameOver.wav", false);
 			link.getGameView().setMidFail(score);
 		} else if (reason == TIMES_UP) {
 			message = "시간초과";
+			Sound("bgm/GameOver.wav", false);
 			link.getGameView().setMidFail(score);
 		} else if (reason == CLEAR_GAME) {
 			message = "게임 클리어";
+			Sound("bgm/GameClear.wav", false);
 			link.getGameView().setMidSuccess(score);
 		} else
 			message = "ERROR : Wrong Value";
@@ -227,4 +251,22 @@ public class GameController {
 			}
 		}
 	}
+
+	// 사운드 재생용 메서드
+	public void Sound(String file, boolean Loop) {
+		Clip clip;
+		try {
+			AudioInputStream ais = AudioSystem.getAudioInputStream(new BufferedInputStream(new FileInputStream(file)));
+			clip = AudioSystem.getClip();
+			clip.open(ais);
+			clip.start();
+			if (Loop)
+				clip.loop(-1);
+			// Loop 값이true면 사운드재생을무한반복시킵니다.
+			// false면 한번만재생시킵니다.
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -52,12 +52,12 @@ public class Client {
 	}
 
 	private ArrayList<User> checkObject(Object getObject) {
-		List<User> users = null;
+		ArrayList<User> users = null;
 
-		if (getObject instanceof List) {
+		if (getObject instanceof ArrayList) {
 			users = new ArrayList<User>();
-			users.addAll((List<User>) getObject);
+			users.addAll((ArrayList<User>) getObject);
 		}
-		return (ArrayList<User>) users;
+		return /*(ArrayList<User>) */users;
 	}
 }

@@ -14,7 +14,7 @@ import model.Linker;
 public class ButtonView extends JPanel {
 	// 각 객체 노드 저장
 	private Linker link;
-	
+
 	private Image startImg;
 	private Image pauseImg;
 
@@ -30,26 +30,36 @@ public class ButtonView extends JPanel {
 		inGame = false;
 		// ■■■ 스타트 버튼 이미지 처리 : 좀더 깔끔하게 ■■■
 		try {
-			startImg = ImageIO.read(new File("image/play.png")).getScaledInstance(90, 90, java.awt.Image.SCALE_SMOOTH);
-			pauseImg = ImageIO.read(new File("image/pause.png")).getScaledInstance(90, 90, java.awt.Image.SCALE_SMOOTH);
+			startImg = ImageIO.read(new File("image/play.png")).getScaledInstance(120, 120,
+					java.awt.Image.SCALE_SMOOTH);
+			pauseImg = ImageIO.read(new File("image/pause.png")).getScaledInstance(120, 120,
+					java.awt.Image.SCALE_SMOOTH);
 		} catch (Exception e) {
 		}
 	}
+
 	public JPanel makeButtonView() {
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setBounds(10, 0, 265, 140);
 		buttonPanel.setLayout(new GridLayout(1, 2, 10, 10));
 
-		// 스타트 생성
 		startBtn = new JToggleButton();
-
 		startBtn.setIcon(new ImageIcon(startImg));
 		startBtn.setSelectedIcon(new ImageIcon(pauseImg));
+		startBtn.setOpaque(false);
+		// 투명화
+		startBtn.setOpaque(false);
+		startBtn.setContentAreaFilled(false);
+		startBtn.setBorderPainted(false);
 
 		exitBtn = new JButton("Exit");
 		exitBtn.setSize(100, 100);
 		exitBtn.setFont(new Font("Arial", Font.PLAIN, 40));
+		// 투명화
+		exitBtn.setOpaque(false);
+		exitBtn.setContentAreaFilled(false);
+		exitBtn.setBorderPainted(false);
 
 		startBtn.addActionListener(new ActionStartEventHandler());
 		exitBtn.addActionListener(new ActionEventHandler());

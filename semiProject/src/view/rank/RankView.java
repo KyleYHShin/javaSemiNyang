@@ -3,7 +3,6 @@ package view.rank;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -160,12 +159,12 @@ public class RankView extends JPanel {
 		Object[] temp = null;
 		for (int i = 0; i < rankTable.getRowCount(); i++) {
 			// 닉네임과 일치하는 것만
-			if (rankTable.getValueAt(i, 1).equals(myNickName)) {
+			if (rankTable.getValueAt(i, 1).toString().equals(myNickName)) {
 				temp = new Object[] { rankTable.getValueAt(i, 0), rankTable.getValueAt(i, 1),
 						rankTable.getValueAt(i, 2), rankTable.getValueAt(i, 3) };
+				// 저장
+				data.add(temp);
 			}
-			// 저장
-			data.add(temp);
 		}
 		Object[][] myData = new Object[data.size()][4];
 		for (int i = 0; i < data.size(); i++) {
@@ -218,7 +217,7 @@ public class RankView extends JPanel {
 					nickName = JOptionPane.showInputDialog("닉네임을 입력해주세요.");
 					// 취소 선택시
 					if (nickName == null) {
-						System.out.println("저장취소");
+						// System.out.println("저장취소");
 						break;
 					}
 					// 특정값을 입력하고 확인 선택시

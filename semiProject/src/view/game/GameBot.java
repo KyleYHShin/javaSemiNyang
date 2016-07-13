@@ -1,8 +1,6 @@
 package view.game;
 
-import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Image;
 
 import javax.swing.*;
 
@@ -11,14 +9,13 @@ import model.Linker;
 public class GameBot extends JProgressBar {
 	// 각 객체 노드 저장
 	private Linker link;
-	private final int MAX_VALUE = 10000;
+	private final int MAX_VALUE = 1000;
 
 	private JPanel botView;
 	private JProgressBar timeBar;
-	
+
 	private final String FIRE = "image/fire.gif";
 	private ImageIcon img;
-	private Image image;
 	private JLabel imgBox;
 	private JPanel fireView;
 
@@ -28,7 +25,6 @@ public class GameBot extends JProgressBar {
 
 		// Image 처리
 		img = new ImageIcon(FIRE);
-//		img = new ImageIcon(this.getClass().getResource("fire.gif"));
 		imgBox = new JLabel();
 		imgBox.setIcon(img);
 	}
@@ -51,21 +47,22 @@ public class GameBot extends JProgressBar {
 
 		return botView;
 	}
-	public void setFire(){
+
+	public void setFire() {
 		fireView.removeAll();
 		fireView.add(imgBox);
 		fireView.revalidate();
 		fireView.repaint();
 	}
-	public void disFire(){
+
+	public void disFire() {
 		fireView.removeAll();
 		fireView.revalidate();
-		fireView.repaint();		
+		fireView.repaint();
 	}
-
+	
 	// 남은 시간과 제한시간을 받아 화면 갱신
 	public void setTime(long remainTime, long TIME_LIMIT) {
-		timeBar.setValue((int) (((float) remainTime / (float) TIME_LIMIT) * MAX_VALUE));
+		timeBar.setValue((int) (((double) remainTime / (double) TIME_LIMIT) * MAX_VALUE));
 	}
-	//남은시간 스레드로 처리
 }

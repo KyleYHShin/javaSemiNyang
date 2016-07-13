@@ -27,10 +27,7 @@ public class GameMid extends JPanel {
 	public GameMid(Linker link) {
 		this.link = link;
 		this.link.setGameMid(this);
-	}
 
-	// default 화면(초기화) 설정
-	public JPanel setDefaultScreen() {
 		midPanel = new JPanel();
 		midPanel.setLayout(null);
 		midPanel.setBounds(0, 0, 700, 750);
@@ -39,13 +36,7 @@ public class GameMid extends JPanel {
 		leftSide = new JPanel();
 		leftSide.setBounds(0, 150, 50, 600);
 
-		middleSide = new JPanel() {
-			public void paint(Graphics g) {
-				g.drawImage(GAME_MAIN.getImage(), 0, 0, null);
-				setOpaque(false);
-				super.paintComponent(g);
-			}
-		};
+		middleSide = new JPanel();
 		middleSide.setBounds(50, 150, 600, 600);
 
 		// ■■■ 우측사이드 추가 ■■■
@@ -55,11 +46,32 @@ public class GameMid extends JPanel {
 		midPanel.add(leftSide);
 		midPanel.add(middleSide);
 		midPanel.add(rightSide);
+	}
 
+	// default 화면(초기화) 설정
+	public JPanel setDefaultScreen() {
+		middleSide = new JPanel() {
+			public void paint(Graphics g) {
+				g.drawImage(GAME_MAIN.getImage(), 0, 0, null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};
+		middleSide.setBounds(50, 150, 600, 600);
+		middleSide.setBackground(Color.RED);
+
+		// 재설정
+		midPanel.removeAll();
+		midPanel.add(leftSide);
+		midPanel.add(middleSide);
+		midPanel.add(rightSide);
+		midPanel.revalidate();
+		midPanel.repaint();
+		
 		return midPanel;
 	}
 
-	// pause 화면 설정
+	// game -> pause 화면 설정
 	public JPanel getPauseScreen() {
 		// 기존 middle 화면 저장
 		tempMidPanel = middleSide;
@@ -85,7 +97,7 @@ public class GameMid extends JPanel {
 		return midPanel;
 	}
 
-	// pause 화면 설정
+	// pause -> game 화면 설정
 	public JPanel getPreScreen() {
 		// 저장한 middle 화면 불러오기
 		middleSide = tempMidPanel;
@@ -101,7 +113,7 @@ public class GameMid extends JPanel {
 		return midPanel;
 	}
 
-	// pause 화면 설정
+	// game 시작 화면 설정
 	public JPanel getGameScreen(int level) {
 		middleSide = new JPanel();
 		middleSide.setBounds(50, 150, 600, 600);
@@ -128,8 +140,7 @@ public class GameMid extends JPanel {
 			}
 		};
 		middleSide.setBounds(50, 150, 600, 600);
-		middleSide.setBackground(Color.RED);
-
+		
 		// 재설정
 		midPanel.removeAll();
 		midPanel.add(leftSide);
@@ -149,11 +160,15 @@ public class GameMid extends JPanel {
 				setOpaque(false);
 				super.paintComponent(g);
 			}
-		};
-		;
+		};		
 		middleSide.setBounds(50, 150, 600, 600);
-		middleSide.setBackground(Color.WHITE);
 
+		String msg = "Game Clear!!\n점수는 " + score +" 점!!\n수고했다냥 :3";
+		JLabel msgLabel = new JLabel(msg, JLabel.CENTER);
+		msgLabel.setBounds(314, 314, 418, 175);
+		msgLabel.setFont(new Font("Arial", Font.BOLD, 40));
+		msgLabel.setOpaque(false);
+		
 		// 재설정
 		midPanel.removeAll();
 		midPanel.add(leftSide);
@@ -227,6 +242,7 @@ public class GameMid extends JPanel {
 	private class RightButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			link.getGameController().Sound("bgm/Click.wav", false);
 			link.getGameController().clearLevel(e.getWhen());
 		}
 
@@ -235,6 +251,7 @@ public class GameMid extends JPanel {
 	private class WrongButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			link.getGameController().Sound("bgm/Click.wav", false);
 			link.getGameController().endGame(WRONG_ANSWER);
 		}
 	}

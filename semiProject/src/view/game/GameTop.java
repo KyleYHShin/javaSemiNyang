@@ -35,7 +35,6 @@ public class GameTop extends JPanel {
 		stageBorder.setTitleColor(Color.GRAY);
 		stageField.setBorder(stageBorder);
 		stageField.setFont(new Font("Arial", Font.BOLD, 40));
-		// ■■■ +글자 크기 설정
 
 		timeField = new JLabel("", JLabel.LEFT);
 		timeField.setBounds(250, 25, 150, 100);
@@ -43,7 +42,7 @@ public class GameTop extends JPanel {
 		timeBorder.setTitleFont(new Font("Arial", Font.BOLD, 18));
 		timeBorder.setTitleColor(Color.GRAY);
 		timeField.setBorder(timeBorder);
-		timeField.setFont(new Font("Arial", Font.BOLD, 30));
+		timeField.setFont(new Font("Arial", Font.BOLD, 35));
 
 		scoreField = new JLabel("", JLabel.CENTER);
 		scoreField.setBounds(450, 25, 200, 100);

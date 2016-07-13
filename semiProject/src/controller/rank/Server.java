@@ -31,12 +31,6 @@ public class Server {
 		loadUserData();
 	}
 
-	// test
-	public void print() {
-		for (User u : users)
-			System.out.println(u);
-	}
-
 	public void startServer() {
 		Auto_Save fileSaver = new Auto_Save(/* users */);
 		try {
@@ -44,7 +38,6 @@ public class Server {
 			fileSaver.start();
 			// 서버용 소켓 객체를 생성
 			server = new ServerSocket(PORT);
-			System.out.println("서버 : 소켓객체 생성 완료");
 
 			// 클라이언트쪽 접속 요청 무한 대기
 			if (server != null) {
@@ -90,13 +83,13 @@ public class Server {
 					if (getObject instanceof String) {
 						// Update 단순 새 데이터만 원하는 경우
 						if (((String) getObject).equals(CHECK_GET)) {
-							System.out.println("서버 : Update 명령어 수신");
+							// System.out.println("서버 : Update 명령어 수신");
 							oos.writeObject(users);
 							oos.flush();
 						}
 					} else if (getObject instanceof User) {
 						// 새로운 User 데이터 기록 후 갱신된 내용 전송
-						System.out.println("서버 : User 데이터 수신");
+						// System.out.println("서버 : User 데이터 수신");
 						users.add((User) getObject);
 						oos.writeObject(users);
 						oos.flush();
@@ -159,7 +152,7 @@ public class Server {
 			users = (ArrayList) ois.readObject();
 		} catch (EOFException e) {
 			System.out.println("서버 : 유저 데이터 Load 완료");
-			print();
+			// print();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
@@ -167,23 +160,6 @@ public class Server {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// // test
-		// System.out.println("유저 객체 로드");
-		// this.users = new ArrayList<User>();
-		// GregorianCalendar gcal;
-		// gcal = new GregorianCalendar(2016, 6, 2);
-		// this.users.add(new User("고양이", 2390, gcal));
-		// gcal = new GregorianCalendar(2016, 5, 28);
-		// this.users.add(new User("noPerson", 2, gcal));
-		// gcal = new GregorianCalendar(2016, 6, 5);
-		// this.users.add(new User("King", 7231, gcal));
-		// gcal = new GregorianCalendar(2016, 6, 11);
-		// this.users.add(new User("강아지", 643, gcal));
-		// gcal = new GregorianCalendar(2016, 6, 7);
-		// this.users.add(new User("noPerson", 467, gcal));
-		// gcal = new GregorianCalendar(2016, 5, 27);
-		// this.users.add(new User("고양이", 14343, gcal));
-		// System.out.println("로드완료");
 	}
 
 	public static void main(String[] args) {
