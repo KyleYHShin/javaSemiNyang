@@ -10,6 +10,17 @@ public class GameMid extends JPanel {
 	// 각 객체 노드 저장
 	private Linker link;
 
+	private JPanel midPanel;
+	private JPanel tempMidPanel;
+
+	private JPanel leftSide;
+	private JPanel middleSide;
+	private JPanel rightSide;
+	
+	private final ImageIcon GAME_CLEAR = new ImageIcon("image/Game_Clear.jpg");
+	private final ImageIcon GAME_OVER = new ImageIcon("image/Game_Over.jpg");
+	private final ImageIcon GAME_PAUSE = new ImageIcon("image/Game_Pause.jpg");
+
 	private final int WRONG_ANSWER = 0; // 오답
 
 	public GameMid(Linker link) {
@@ -17,62 +28,163 @@ public class GameMid extends JPanel {
 		this.link.setGameMid(this);
 	}
 
-	// default 화면 설정
+	// default 화면(초기화) 설정
 	public JPanel setDefaultScreen() {
-		System.out.println("GameMid : default 화면 설정");
-		JPanel defaultScreen = new JPanel();
-		defaultScreen.setSize(600, 600);
-		defaultScreen.setBackground(Color.BLACK);
+		midPanel = new JPanel();
+		midPanel.setLayout(null);
+		midPanel.setBounds(0, 0, 700, 750);
+		// ■■■ 좌측사이드 추가 ■■■
+		leftSide = new JPanel();
+		leftSide.setBounds(0, 150, 50, 600);
+		leftSide.setBackground(Color.GREEN);
+		
+		middleSide = new JPanel();
+		middleSide.setBounds(50, 150, 600, 600);
+		middleSide.setBackground(Color.BLACK);
+		// ■■■ 우측사이드 추가 ■■■
+		rightSide = new JPanel();
+		rightSide.setBounds(650, 150, 50, 600);
+		rightSide.setBackground(Color.YELLOW);
 
-		return defaultScreen;
+		midPanel.add(leftSide);
+		midPanel.add(middleSide);
+		midPanel.add(rightSide);
+
+		return midPanel;
 	}
 
 	// pause 화면 설정
-	public JPanel setPauseScreen() {
-		System.out.println("GameMid : pause 화면 설정");
-		JPanel pauseScreen = new JPanel();
-		pauseScreen.setSize(600, 600);
-		pauseScreen.setBackground(Color.BLACK);
+	public JPanel getPauseScreen() {
+		// 기존 middle 화면 저장
+		tempMidPanel = middleSide;
 
-		return pauseScreen;
+		// ■■■ 해당 화면 설정 ■■■		
+		middleSide = new JPanel(){
+			public void paint(Graphics g){
+				g.drawImage(GAME_PAUSE.getImage(), 0, 0, null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};;
+		middleSide.setBounds(50, 150, 600, 600);
+		middleSide.setBackground(Color.BLUE);
+
+		// 재설정
+		midPanel.removeAll();
+		midPanel.add(leftSide);
+		midPanel.add(middleSide);
+		midPanel.add(rightSide);
+		midPanel.revalidate();
+		midPanel.repaint();
+
+		return midPanel;
+	}
+
+	// pause 화면 설정
+	public JPanel getPreScreen() {
+		// 저장한 middle 화면 불러오기
+		middleSide = tempMidPanel;
+
+		// 재설정
+		midPanel.removeAll();
+		midPanel.add(leftSide);
+		midPanel.add(middleSide);
+		midPanel.add(rightSide);
+		midPanel.revalidate();
+		midPanel.repaint();
+
+		return midPanel;
+	}
+
+	// pause 화면 설정
+	public JPanel getGameScreen(int level) {
+		// 해당 화면 설정
+		middleSide = new JPanel();
+		middleSide.setBounds(50, 150, 600, 600);
+		middleSide = makeBlockPanel(level);
+
+		// 재설정
+		midPanel.removeAll();
+		midPanel.add(leftSide);
+		midPanel.add(middleSide);
+		midPanel.add(rightSide);
+		midPanel.revalidate();
+		midPanel.repaint();
+
+		return midPanel;
+	}
+
+	// Fail 화면 설정
+	public JPanel getFailScreen(int score) {
+		// ■■■ 해당 화면 설정 ■■■
+		middleSide = new JPanel(){
+			public void paint(Graphics g){
+				g.drawImage(GAME_OVER.getImage(), 0, 0, null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};
+		middleSide.setBounds(50, 150, 600, 600);
+		middleSide.setBackground(Color.RED);
+
+		// 재설정
+		midPanel.removeAll();
+		midPanel.add(leftSide);
+		midPanel.add(middleSide);
+		midPanel.add(rightSide);
+		midPanel.revalidate();
+		midPanel.repaint();
+
+		return midPanel;
 	}
 
 	// Clear 화면 설정
-	public JPanel setClearScreen(){
-		System.out.println("GameMid : Clear 화면 설정");
-		JPanel clearScreen = new JPanel();
-		clearScreen.setSize(600, 600);
-		clearScreen.setBackground(Color.BLACK);
+	public JPanel getSuccessScreen(int score) {
+		// ■■■ 해당 화면 설정 ■■■
+		middleSide = new JPanel(){
+			public void paint(Graphics g){
+				g.drawImage(GAME_CLEAR.getImage(), 0, 0, null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};;
+		middleSide.setBounds(50, 150, 600, 600);
+		middleSide.setBackground(Color.WHITE);
 
-		return clearScreen;		
+		// 재설정
+		midPanel.removeAll();
+		midPanel.add(leftSide);
+		midPanel.add(middleSide);
+		midPanel.add(rightSide);
+		midPanel.revalidate();
+		midPanel.repaint();
+
+		return midPanel;
 	}
 
 	// 나뉜 블럭이 있는 화면 설정
-	public JPanel makeBlockPanel(int level) {
+	private JPanel makeBlockPanel(int level) {
 		// level에 따른 설정
+		// ■■■ (현재 최대레벨 제한으로 필요 없음)
 		// ■■■ 일정레벨 이상일 때 칸 갯수 더이상 증가 못하게
 		int block = level / 2 + 2;
 		int blockNum = block * block;
-		int blockTerm = 23 - level;
-		// int difColor = (int) (100 - (985/13) *
+		int blockTerm = 25 - level;
 
 		// 게임용 패널 생성
 		JPanel blockPanel = new JPanel();
-		blockPanel.setSize(600, 600);
+		blockPanel = new JPanel();
 		blockPanel.setLayout(new GridLayout(block, block, blockTerm, blockTerm));
+		blockPanel.setBounds(50, 150, 600, 600);
+//		blockPanel.setSize(600, 600);
 
-		// ■■■ 색상 변경 알고리즘 추가-> Btn[i].setBackground(Color.BLACK);
-		
-		Random r = new Random(); 
-		
-		int difColor = 13-level/2; //임의로 설정 (20탄 진행동안 12~3까지 줄어들게)
-		int red = r.nextInt(256-difColor);
-		int green = r.nextInt(256-difColor);
-		int blue = r.nextInt(256-difColor);
-		// int difColor = (int) (100 - (985 / 13) * java.lang.Math.log((double)
-		// level));
-		
-		Color wrongColor = new Color(red,green,blue);
+		// 블럭 색상 선택
+		Random r = new Random();
+		int difColor = 12 + 100 / level;
+		int red = r.nextInt(256 - difColor);
+		int green = r.nextInt(256 - difColor);
+		int blue = r.nextInt(256 - difColor);
+		Color wrongColor = new Color(red, green, blue);
 		Color rightColor = new Color(red + difColor, green + difColor, blue + difColor);
 
 		// 버튼 갯수 초기화

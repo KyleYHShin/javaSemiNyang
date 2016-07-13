@@ -2,50 +2,44 @@ package view.button;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
-import javax.swing.event.*;
-
-import controller.game.GameController;
 import model.Linker;
-import view.MainFrame;
 
 public class ButtonView extends JPanel {
-	//각 객체 노드 저장
+	// 각 객체 노드 저장
 	private Linker link;
 	
+	private Image startImg;
+	private Image pauseImg;
+
 	private JToggleButton startBtn;
-	Image startImg;
-	Image pauseImg;
-	
 	private JButton exitBtn;
-	
+
 	boolean inGame;
 
 	public ButtonView(Linker link) {
 		this.link = link;
 		this.link.setButtonView(this);
-		
+
 		inGame = false;
 		// ■■■ 스타트 버튼 이미지 처리 : 좀더 깔끔하게 ■■■
 		try {
-			startImg = ImageIO.read(new File("image/play.png")).getScaledInstance(100, 100,
-					java.awt.Image.SCALE_SMOOTH);
-			pauseImg = ImageIO.read(new File("image/pause.png")).getScaledInstance(100, 100,
-					java.awt.Image.SCALE_SMOOTH);
-
+			startImg = ImageIO.read(new File("image/play.png")).getScaledInstance(90, 90, java.awt.Image.SCALE_SMOOTH);
+			pauseImg = ImageIO.read(new File("image/pause.png")).getScaledInstance(90, 90, java.awt.Image.SCALE_SMOOTH);
 		} catch (Exception e) {
 		}
 	}
-
 	public JPanel makeButtonView() {
 
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout());
-		buttonPanel.setSize(300, 200);
+		buttonPanel.setBounds(10, 0, 265, 140);
+		buttonPanel.setLayout(new GridLayout(1, 2, 10, 10));
 
 		// 스타트 생성
 		startBtn = new JToggleButton();
@@ -54,7 +48,7 @@ public class ButtonView extends JPanel {
 		startBtn.setSelectedIcon(new ImageIcon(pauseImg));
 
 		exitBtn = new JButton("Exit");
-		exitBtn.setPreferredSize(new Dimension(125, 110));
+		exitBtn.setSize(100, 100);
 		exitBtn.setFont(new Font("Arial", Font.PLAIN, 40));
 
 		startBtn.addActionListener(new ActionStartEventHandler());
@@ -64,11 +58,11 @@ public class ButtonView extends JPanel {
 		buttonPanel.add(exitBtn);
 
 		return buttonPanel;
-	}	
-	
+	}
+
 	// 게임 종료시 시작버튼 이미지 초기화
-	public void setRefreshStartButton(){
-		startBtn.setSelected(false);		
+	public void setRefreshStartButton() {
+		startBtn.setSelected(false);
 	}
 
 	// Exit Button Action
@@ -76,9 +70,8 @@ public class ButtonView extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int result = JOptionPane.showConfirmDialog(link.getMainFrame(), "정말 종료하시겠습니까?");
-
-			if (result == JOptionPane.YES_OPTION) {
+			if (JOptionPane.showConfirmDialog(link.getMainFrame(), "정말 종료하시겠습니까?", "프로그램 종료",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 				System.exit(0);
 			}
 		}

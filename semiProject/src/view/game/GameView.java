@@ -1,10 +1,8 @@
 package view.game;
 
-import java.awt.*;
 import javax.swing.*;
 
 import model.Linker;
-import view.MainFrame;
 
 public class GameView extends JPanel {
 	// 각 객체 노드 저장
@@ -18,8 +16,6 @@ public class GameView extends JPanel {
 	private GameTop gameTop;
 	private GameMid gameMid;
 	private GameBot gameBot;
-	
-	private JPanel tempPausePanel;
 
 	public GameView(Linker link) {
 		this.link = link;
@@ -29,71 +25,45 @@ public class GameView extends JPanel {
 		gameMid = new GameMid(this.link);
 		gameBot = new GameBot(this.link);
 
-		// Game Main Panel
 		gameTotalPanel = new JPanel();
 		gameTotalPanel.setLayout(null);
-		gameTotalPanel.setSize(new Dimension(700, 850));
-		gameTotalPanel.setLocation(0, 0);
+		gameTotalPanel.setBounds(0, 0, 700, 850);
 
-		// 1.Top Panel
-		gameTopPanel = new JPanel();
-		gameTopPanel.setLayout(null);
-		gameTopPanel.setSize(new Dimension(700, 150));
-		gameTopPanel.setLocation(0, 0);
-		gameTopPanel.setBackground(Color.ORANGE);
-		// gameTopPanel.add();
+		gameTopPanel = gameTop.setDefaultScreen();
+		gameMidPanel = gameMid.setDefaultScreen();
+		gameBotPanel = gameBot.setDefaultScreen();
+
 		gameTotalPanel.add(gameTopPanel);
-
-		// 2.Middle Panel
-		gameMidPanel = new JPanel();
-		gameMidPanel.setLayout(null);
-		gameMidPanel.setSize(new Dimension(600, 600));
-		gameMidPanel.setLocation(50, 150);
-		gameMidPanel.setBackground(Color.BLACK);
-		setMidDefault();
 		gameTotalPanel.add(gameMidPanel);
-
-		// 3.Bottom Panel
-		gameBotPanel = new JPanel();
-		gameBotPanel.setLayout(null);
-		gameBotPanel.setSize(new Dimension(700, 100));
-		gameBotPanel.setLocation(0, 750);
-		gameBotPanel.setBackground(Color.GREEN);
-		// gameTopPanel.add();
 		gameTotalPanel.add(gameBotPanel);
 	}
-
-	public void setMidDefault() {
-		gameMidPanel.removeAll();
-		gameMidPanel.add(link.getGameMid().setDefaultScreen());
-		gameMidPanel.revalidate();
-		gameMidPanel.repaint();
-
-	}
-
+	
 	public void setMidPause() {
-		 gameMidPanel.removeAll();
-		 gameMidPanel.add(link.getGameMid().setPauseScreen());
-		 gameMidPanel.revalidate();
-		 gameMidPanel.repaint();
+		gameMidPanel = link.getGameMid().getPauseScreen();
+		gameTotalPanel.revalidate();
+		gameTotalPanel.repaint();
 	}
 
-	public void resetPreMid() {
-		 gameMidPanel.removeAll();
-		 gameMidPanel.add(tempPausePanel);
-		 gameMidPanel.revalidate();
-		 gameMidPanel.repaint();
+	public void setMidPre() {
+		gameMidPanel = link.getGameMid().getPreScreen();
+		gameTotalPanel.revalidate();
+		gameTotalPanel.repaint();
 	}
 
-	public void resetMidLevel(int level) {
-		// 기존 화면내의 객체들 모두 제거
-		gameMidPanel.removeAll();
-		// Level에 맞는 화면 생성하여 추가
-		tempPausePanel = link.getGameMid().makeBlockPanel(level);
-		gameMidPanel.add(tempPausePanel);
-		// 갱신
-		gameMidPanel.revalidate();
-		gameMidPanel.repaint();
+	public void setMidLevel(int level) {
+		gameMidPanel = link.getGameMid().getGameScreen(level);
+		gameTotalPanel.revalidate();
+		gameTotalPanel.repaint();
+	}
+	public void setMidSuccess(int score){
+		gameMidPanel = link.getGameMid().getSuccessScreen(score);
+		gameTotalPanel.revalidate();
+		gameTotalPanel.repaint();
+	}
+	public void setMidFail(int score){
+		gameMidPanel = link.getGameMid().getFailScreen(score);
+		gameTotalPanel.revalidate();
+		gameTotalPanel.repaint();
 	}
 
 	public JPanel getGameTotalPanel() {
