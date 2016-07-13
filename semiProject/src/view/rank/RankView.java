@@ -2,6 +2,7 @@ package view.rank;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import javax.swing.*;
@@ -21,7 +22,7 @@ public class RankView extends JPanel {
 	private JRadioButton jrBtnDaily, jrBtnWeekly, jrBtnMonthly;
 
 	private String[] columnNames = { "랭킹", "닉네임", "점수", "날짜" };
-	
+
 	private JTable rankTable;
 	private DefaultTableModel model;
 	private JScrollPane rankScroll;
@@ -99,7 +100,7 @@ public class RankView extends JPanel {
 		thirdPane.setBounds(5, 440, 275, 80);
 		// 객체 생성
 		myTable = new JTable();
-//		Object rowData1[][] = { { 1, "맛동산", 100, "오리온" } };
+		// Object rowData1[][] = { { 1, "맛동산", 100, "오리온" } };
 		myModel = new DefaultTableModel(null, columnNames);
 		myTable.setModel(myModel);
 		myTable.setPreferredScrollableViewportSize(new Dimension(260, 50));
@@ -136,7 +137,12 @@ public class RankView extends JPanel {
 		return rankPanel;
 	}
 
-	public void updateJTable(Object[][] data) {
+	public void addNewUser(String nickName, int score, long playTime) {
+		this.myNickName = nickName;
+		updateMainTable(rankController.updateNewUser(getCheckedButton().getText(), nickName, score, playTime));
+	}
+
+	private void updateMainTable(Object[][] data) {
 		// 데이터 업데이트
 		model = new DefaultTableModel(data, columnNames);
 		rankTable.setModel(model);
@@ -145,13 +151,28 @@ public class RankView extends JPanel {
 		rankTable.getColumn("닉네임").setPreferredWidth(80);
 		rankTable.getColumn("점수").setPreferredWidth(70);
 		rankTable.getColumn("날짜").setPreferredWidth(130);
-		// ■■■■■ 사용자 닉네임이 존재하는 칸 유색 처리 ■■■■■
+
+		updateSubTable();
 	}
 
-	public void updateMyTable(String nickName) {
-		this.myNickName = nickName;
-		// 데이터 업데이트
-		myModel = new DefaultTableModel(rankController.getMyList(nickName), columnNames);
+	private void updateSubTable() {
+		ArrayList<Object[]> data = new ArrayList<Object[]>();
+		Object[] temp = null;
+		for (int i = 0; i < rankTable.getRowCount(); i++) {
+			// 닉네임과 일치하는 것만
+			if (rankTable.getValueAt(i, 1).equals(myNickName)) {
+				temp = new Object[] { rankTable.getValueAt(i, 0), rankTable.getValueAt(i, 1),
+						rankTable.getValueAt(i, 2), rankTable.getValueAt(i, 3) };
+			}
+			// 저장
+			data.add(temp);
+		}
+		Object[][] myData = new Object[data.size()][4];
+		for (int i = 0; i < data.size(); i++) {
+			myData[i] = data.get(i);
+		}
+
+		myModel = new DefaultTableModel(myData, columnNames);
 		myTable.setModel(myModel);
 		// 열 너비 설정
 		myTable.getColumn("랭킹").setPreferredWidth(20);
@@ -160,12 +181,29 @@ public class RankView extends JPanel {
 		myTable.getColumn("날짜").setPreferredWidth(130);
 	}
 
+	private void setMyNickName(String myNickName) {
+		this.myNickName = myNickName;
+	}
+
+	private JRadioButton getCheckedButton() {
+		JRadioButton bTn = null;
+
+		if (jrBtnDaily.isSelected())
+			bTn = jrBtnDaily;
+		else if (jrBtnWeekly.isSelected())
+			bTn = jrBtnWeekly;
+		else
+			bTn = jrBtnMonthly;
+
+		return bTn;
+	}
+
 	// 내부클래스로 JRadioButton 이벤트 처리
 	private class RankJRadioButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JRadioButton jBtn = (JRadioButton) e.getSource();
-			updateJTable(rankController.getRankList(jBtn.getText(), false));
+			updateMainTable(rankController.getRankList(jBtn.getText(), false));
 		}
 	}
 
@@ -174,7 +212,6 @@ public class RankView extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JButton rBtn = (JButton) e.getSource();
-			// ■■■■■ 닉네임 정렬 미구현 ■■■■■
 			if (rBtn.getText().equals("닉네임 검색")) {
 				String nickName = "";
 				while (true) {
@@ -186,13 +223,13 @@ public class RankView extends JPanel {
 					}
 					// 특정값을 입력하고 확인 선택시
 					if (!nickName.equals("") && nickName != null) {
-						updateMyTable(nickName);
+						setMyNickName(nickName);
+						updateSubTable();
 						break;
 					}
 				}
 			} else if (rBtn.getText().equals("랭킹 업데이트")) {
-				updateJTable(rankController.getRankList(jrBtnMonthly.getText(), true));
-				jrBtnMonthly.setSelected(true);
+				updateMainTable(rankController.getRankList(getCheckedButton().getText(), true));
 			}
 		}
 	}

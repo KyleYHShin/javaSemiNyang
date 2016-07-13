@@ -7,6 +7,11 @@ import model.Linker;
 import java.util.*;
 
 public class GameMid extends JPanel {
+	private final ImageIcon GAME_MAIN = new ImageIcon("image/Game_Main.jpg");
+	private final ImageIcon GAME_CLEAR = new ImageIcon("image/Game_Clear.jpg");
+	private final ImageIcon GAME_OVER = new ImageIcon("image/Game_Over.jpg");
+	private final ImageIcon GAME_PAUSE = new ImageIcon("image/Game_Pause.jpg");
+	
 	// 각 객체 노드 저장
 	private Linker link;
 
@@ -16,10 +21,6 @@ public class GameMid extends JPanel {
 	private JPanel leftSide;
 	private JPanel middleSide;
 	private JPanel rightSide;
-	
-	private final ImageIcon GAME_CLEAR = new ImageIcon("image/Game_Clear.jpg");
-	private final ImageIcon GAME_OVER = new ImageIcon("image/Game_Over.jpg");
-	private final ImageIcon GAME_PAUSE = new ImageIcon("image/Game_Pause.jpg");
 
 	private final int WRONG_ANSWER = 0; // 오답
 
@@ -33,18 +34,23 @@ public class GameMid extends JPanel {
 		midPanel = new JPanel();
 		midPanel.setLayout(null);
 		midPanel.setBounds(0, 0, 700, 750);
+
 		// ■■■ 좌측사이드 추가 ■■■
 		leftSide = new JPanel();
 		leftSide.setBounds(0, 150, 50, 600);
-		leftSide.setBackground(Color.GREEN);
-		
-		middleSide = new JPanel();
+
+		middleSide = new JPanel() {
+			public void paint(Graphics g) {
+				g.drawImage(GAME_MAIN.getImage(), 0, 0, null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};
 		middleSide.setBounds(50, 150, 600, 600);
-		middleSide.setBackground(Color.BLACK);
+
 		// ■■■ 우측사이드 추가 ■■■
 		rightSide = new JPanel();
 		rightSide.setBounds(650, 150, 50, 600);
-		rightSide.setBackground(Color.YELLOW);
 
 		midPanel.add(leftSide);
 		midPanel.add(middleSide);
@@ -58,16 +64,15 @@ public class GameMid extends JPanel {
 		// 기존 middle 화면 저장
 		tempMidPanel = middleSide;
 
-		// ■■■ 해당 화면 설정 ■■■		
-		middleSide = new JPanel(){
-			public void paint(Graphics g){
+		// 화면 설정
+		middleSide = new JPanel() {
+			public void paint(Graphics g) {
 				g.drawImage(GAME_PAUSE.getImage(), 0, 0, null);
 				setOpaque(false);
 				super.paintComponent(g);
 			}
-		};;
+		};
 		middleSide.setBounds(50, 150, 600, 600);
-		middleSide.setBackground(Color.BLUE);
 
 		// 재설정
 		midPanel.removeAll();
@@ -117,8 +122,8 @@ public class GameMid extends JPanel {
 	// Fail 화면 설정
 	public JPanel getFailScreen(int score) {
 		// ■■■ 해당 화면 설정 ■■■
-		middleSide = new JPanel(){
-			public void paint(Graphics g){
+		middleSide = new JPanel() {
+			public void paint(Graphics g) {
 				g.drawImage(GAME_OVER.getImage(), 0, 0, null);
 				setOpaque(false);
 				super.paintComponent(g);
@@ -141,13 +146,14 @@ public class GameMid extends JPanel {
 	// Clear 화면 설정
 	public JPanel getSuccessScreen(int score) {
 		// ■■■ 해당 화면 설정 ■■■
-		middleSide = new JPanel(){
-			public void paint(Graphics g){
+		middleSide = new JPanel() {
+			public void paint(Graphics g) {
 				g.drawImage(GAME_CLEAR.getImage(), 0, 0, null);
 				setOpaque(false);
 				super.paintComponent(g);
 			}
-		};;
+		};
+		;
 		middleSide.setBounds(50, 150, 600, 600);
 		middleSide.setBackground(Color.WHITE);
 
@@ -176,11 +182,12 @@ public class GameMid extends JPanel {
 		blockPanel = new JPanel();
 		blockPanel.setLayout(new GridLayout(block, block, blockTerm, blockTerm));
 		blockPanel.setBounds(50, 150, 600, 600);
-//		blockPanel.setSize(600, 600);
+		// blockPanel.setSize(600, 600);
 
 		// 블럭 색상 선택
 		Random r = new Random();
 		int difColor = 12 + 100 / level;
+		
 		int red = r.nextInt(256 - difColor);
 		int green = r.nextInt(256 - difColor);
 		int blue = r.nextInt(256 - difColor);

@@ -37,10 +37,8 @@ public class GameController {
 		this.link.setGameController(this);
 
 		// ■■■ 임시 : 레벨별 최대 점수 ■■■
-		topScore = new int[] { 100, 200, 300, 400, 500, 600, 700, 800,
-					1000, 1200, 1400, 1600, 1800,
-					2200, 2600, 3000, 3400, 3800, 
-					5000, 6000 };
+		topScore = new int[] { 100, 200, 300, 400, 500, 600, 700, 800, 1000, 1200, 1400, 1600, 1800, 2200, 2600, 3000,
+				3400, 3800, 5000, 6000 };
 	}
 
 	// 시작 버튼에 대한 처리
@@ -128,7 +126,7 @@ public class GameController {
 
 		// 2. 점수 갱신
 		remainTime = endTime - clickTime;
-		int stageScore = (int)(((double) remainTime / (double) TIME_LIMIT) * topScore[level - 1]);
+		int stageScore = (int) (((double) remainTime / (double) TIME_LIMIT) * topScore[level - 1]);
 		System.out.println("Stage Score : " + stageScore);
 		score += stageScore;
 		System.out.println("Total Score : " + score);
@@ -198,11 +196,8 @@ public class GameController {
 				}
 				// 특정값을 입력하고 확인 선택시
 				if (!nickName.equals("") && nickName != null) {
-					// 서버에 기록 전송후 랭크뷰의 메인 테이블 갱신
-					link.getRankView().getRankController().updateNewUser(nickName, score, System.currentTimeMillis());
-					// 같은 닉네임으로 기록검색&정렬 서브테이블 갱신
-					link.getRankView().updateMyTable(nickName);
-					System.out.println("저장완료");
+					// 서버에 기록 전송후 랭크뷰의 메인 테이블 -> 서브 테이블 갱신
+					link.getRankView().addNewUser(nickName, score, System.currentTimeMillis());
 					break;
 				}
 			}
