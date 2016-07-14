@@ -199,14 +199,14 @@ public class GameController {
 
 		// MainFrame의 시작버튼 초기화
 		mainFrame.getButtonView().setRefreshStartButton();
-		System.out.println("GameController : 게임종료(" + message + ")");
+		// System.out.println("GameController : 게임종료(" + message + ")");
 	}
 
 	// 게임 종료 후 점수 업로드 확인창
 	private void endMessage() {
 		String endMsg = "점수 : " + score + "\n저장하시겠습니까?";
 
-		if (JOptionPane.showConfirmDialog(mainFrame, endMsg, "Upload",
+		if (score != 0 && JOptionPane.showConfirmDialog(mainFrame, endMsg, "Upload",
 				JOptionPane.OK_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
 			// 문자열 입력창
 			String nickName = "";
