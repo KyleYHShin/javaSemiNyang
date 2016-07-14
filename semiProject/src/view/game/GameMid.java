@@ -133,7 +133,7 @@ public class GameMid extends JPanel {
 	}
 
 	// Fail 화면 설정
-	public JPanel getFailScreen(int score) {
+	public JPanel getFailScreen() {
 		middleSide = new JPanel() {
 			public void paint(Graphics g) {
 				g.drawImage(GAME_OVER.getImage(), 0, 0, null);
@@ -155,7 +155,7 @@ public class GameMid extends JPanel {
 	}
 
 	// Clear 화면 설정
-	public JPanel getSuccessScreen(int score) {
+	public JPanel getSuccessScreen() {
 		middleSide = new JPanel() {
 			public void paint(Graphics g) {
 				g.drawImage(GAME_CLEAR.getImage(), 0, 0, null);

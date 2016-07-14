@@ -176,17 +176,17 @@ public class GameController {
 			message = "오답";
 			endSound = Sound(GAME_OVER);
 			endSound.start();
-			mainFrame.getGameView().setMidFail(score);
+			mainFrame.getGameView().setMidFail();
 		} else if (reason == TIMES_UP) {
 			message = "시간초과";
 			endSound = Sound(GAME_OVER);
 			endSound.start();
-			mainFrame.getGameView().setMidFail(score);
+			mainFrame.getGameView().setMidFail();
 		} else if (reason == CLEAR_GAME) {
 			message = "게임 클리어";
 			endSound = Sound(GAME_CLEAR);
 			endSound.start();
-			mainFrame.getGameView().setMidSuccess(score);
+			mainFrame.getGameView().setMidSuccess();
 		} else
 			message = "ERROR : Wrong Value";
 

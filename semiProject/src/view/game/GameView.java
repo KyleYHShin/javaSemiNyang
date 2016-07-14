@@ -51,13 +51,13 @@ public class GameView extends JPanel {
 		gameTotalPanel.revalidate();
 		gameTotalPanel.repaint();
 	}
-	public void setMidSuccess(int score){
-		gameMidPanel = gameMid.getSuccessScreen(score);
+	public void setMidSuccess(){
+		gameMidPanel = gameMid.getSuccessScreen();
 		gameTotalPanel.revalidate();
 		gameTotalPanel.repaint();
 	}
-	public void setMidFail(int score){
-		gameMidPanel = gameMid.getFailScreen(score);
+	public void setMidFail(){
+		gameMidPanel = gameMid.getFailScreen();
 		gameTotalPanel.revalidate();
 		gameTotalPanel.repaint();
 	}
