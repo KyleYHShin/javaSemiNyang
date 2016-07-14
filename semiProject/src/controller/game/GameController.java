@@ -8,7 +8,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
 
-import model.Linker;
 import view.MainFrame;
 
 public class GameController {
@@ -39,6 +38,10 @@ public class GameController {
 
 	private Thread game; // 쓰레드
 	private Clip mainSound;
+	private Clip endSound;
+	private final String IN_GAME = "bgm/InGame.wav";
+	private final String GAME_OVER = "bgm/GameOver.wav";
+	private final String GAME_CLEAR = "bgm/GameClear.wav";
 
 	public GameController() {
 		mainFrame = new MainFrame(this);
@@ -46,22 +49,15 @@ public class GameController {
 		// ■■■ 레벨별 최대 점수 ■■■
 		topScore = new int[] { 100, 200, 300, 400, 500, 600, 700, 800, 1000, 1200, 1400, 1600, 1800, 2200, 2600, 3000,
 				3400, 3800, 5000, 6000 };
-
-		// 배경음악 설정
-		try {
-			AudioInputStream ais = AudioSystem
-					.getAudioInputStream(new BufferedInputStream(new FileInputStream("bgm/InGame.wav")));
-			mainSound = AudioSystem.getClip();
-			mainSound.open(ais);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	// 시작 버튼에 대한 처리
 	public void startSignal() {
 		// start : 처음 시작하는 경우
 		if (!started) {
+			// 새로 할당(처음부터 시작)
+			mainSound = Sound(IN_GAME);
+			mainSound.loop(-1);// 무한반복 선언
 			mainSound.start();
 			startNewGame();
 			mainFrame.getGameView().getGameBot().setFire();
@@ -178,15 +174,18 @@ public class GameController {
 		String message;
 		if (reason == WRONG_ANSWER) {
 			message = "오답";
-			Sound("bgm/GameOver.wav", false);
+			endSound = Sound(GAME_OVER);
+			endSound.start();
 			mainFrame.getGameView().setMidFail(score);
 		} else if (reason == TIMES_UP) {
 			message = "시간초과";
-			Sound("bgm/GameOver.wav", false);
+			endSound = Sound(GAME_OVER);
+			endSound.start();
 			mainFrame.getGameView().setMidFail(score);
 		} else if (reason == CLEAR_GAME) {
 			message = "게임 클리어";
-			Sound("bgm/GameClear.wav", false);
+			endSound = Sound(GAME_CLEAR);
+			endSound.start();
 			mainFrame.getGameView().setMidSuccess(score);
 		} else
 			message = "ERROR : Wrong Value";
@@ -252,24 +251,32 @@ public class GameController {
 		}
 	}
 
-	// 사운드 재생용 메서드
-	public void Sound(String file, boolean Loop) {
-		Clip clip;
+	// 게임 메인테마 음악을 새로 (할당하여 처음부터) 시작하는 메서드
+	public void setMainSound(Clip mainSound) {
 		try {
-			AudioInputStream ais = AudioSystem.getAudioInputStream(new BufferedInputStream(new FileInputStream(file)));
-			clip = AudioSystem.getClip();
-			clip.open(ais);
-			clip.start();
-			if (Loop)
-				clip.loop(-1);
-			// Loop 값이true면 사운드재생을무한반복시킵니다.
-			// false면 한번만재생시킵니다.
+			AudioInputStream ais = AudioSystem
+					.getAudioInputStream(new BufferedInputStream(new FileInputStream("bgm/InGame.wav")));
+			mainSound = AudioSystem.getClip();
+			mainSound.open(ais);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public MainFrame getMainFrame(){
+
+	// 사운드 재생용 메서드
+	public Clip Sound(String file) {
+		Clip clip = null;
+		try {
+			AudioInputStream ais = AudioSystem.getAudioInputStream(new BufferedInputStream(new FileInputStream(file)));
+			clip = AudioSystem.getClip();
+			clip.open(ais);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return clip;
+	}
+
+	public MainFrame getMainFrame() {
 		return mainFrame;
 	}
 

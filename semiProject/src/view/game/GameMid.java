@@ -69,7 +69,7 @@ public class GameMid extends JPanel {
 		midPanel.add(rightSide);
 		midPanel.revalidate();
 		midPanel.repaint();
-		
+
 		return midPanel;
 	}
 
@@ -142,7 +142,7 @@ public class GameMid extends JPanel {
 			}
 		};
 		middleSide.setBounds(50, 150, 600, 600);
-		
+
 		// 재설정
 		midPanel.removeAll();
 		midPanel.add(leftSide);
@@ -162,15 +162,15 @@ public class GameMid extends JPanel {
 				setOpaque(false);
 				super.paintComponent(g);
 			}
-		};		
+		};
 		middleSide.setBounds(50, 150, 600, 600);
 
-		String msg = "Game Clear!!\n점수는 " + score +" 점!!\n수고했다냥 :3";
+		String msg = "Game Clear!!\n점수는 " + score + " 점!!\n수고했다냥 :3";
 		JLabel msgLabel = new JLabel(msg, JLabel.CENTER);
 		msgLabel.setBounds(314, 314, 418, 175);
 		msgLabel.setFont(new Font("Arial", Font.BOLD, 40));
 		msgLabel.setOpaque(false);
-		
+
 		// 재설정
 		midPanel.removeAll();
 		midPanel.add(leftSide);
@@ -198,20 +198,21 @@ public class GameMid extends JPanel {
 		blockPanel.setBounds(50, 150, 600, 600);
 
 		// 블럭 색상 선택
+		final int MAX_HALF = 128;
 		int difColor = 10 + 100 / level;
 		int red, green, blue;
 		Color wrongColor, rightColor;
 
 		Random r = new Random();
 		if (r.nextBoolean()) {
-			red = r.nextInt(256 - difColor);
-			green = r.nextInt(256 - difColor);
-			blue = r.nextInt(256 - difColor);
+			red = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
+			green = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
+			blue = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
 			wrongColor = new Color(red + difColor, green + difColor, blue + difColor);
 		} else {
-			red = r.nextInt(256 - difColor) + (difColor);
-			green = r.nextInt(256 - difColor) + (difColor);
-			blue = r.nextInt(256 - difColor) + (difColor);
+			red = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
+			green = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
+			blue = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
 			wrongColor = new Color(red - difColor, green - difColor, blue - difColor);
 		}
 		rightColor = new Color(red, green, blue);
@@ -244,7 +245,7 @@ public class GameMid extends JPanel {
 	private class RightButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			gameController.Sound("bgm/Click.wav", false);
+			gameController.Sound("bgm/Click.wav").start();
 			gameController.clearLevel(e.getWhen());
 		}
 
@@ -253,7 +254,7 @@ public class GameMid extends JPanel {
 	private class WrongButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			gameController.Sound("bgm/Click.wav", false);
+			gameController.Sound("bgm/Click.wav").start();
 			gameController.endGame(WRONG_ANSWER);
 		}
 	}
