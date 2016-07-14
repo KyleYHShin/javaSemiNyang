@@ -1,10 +1,10 @@
 package run;
 
-import view.MainFrame;
+import controller.game.GameController;
 
 public class Run {
 	public static void main(String[] args) {
-		MainFrame mf = new MainFrame();
-		mf.setMainFrame();
+		GameController game = new GameController();
+		game.getMainFrame().setMainFrame();
 	}
 }

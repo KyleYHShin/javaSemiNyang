@@ -9,10 +9,11 @@ import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
 
 import model.Linker;
+import view.MainFrame;
 
 public class GameController {
-	// 각 객체 노드 저장
-	private Linker link;
+	// 객체 목록
+	private MainFrame mainFrame;
 
 	private final int DURATION = 10; // 화면 갱신 시간(0.01초)
 	private final int TIME_LIMIT = 10000;// 게임 제한 시간
@@ -39,9 +40,8 @@ public class GameController {
 	private Thread game; // 쓰레드
 	private Clip mainSound;
 
-	public GameController(Linker link) {
-		this.link = link;
-		this.link.setGameController(this);
+	public GameController() {
+		mainFrame = new MainFrame(this);
 
 		// ■■■ 레벨별 최대 점수 ■■■
 		topScore = new int[] { 100, 200, 300, 400, 500, 600, 700, 800, 1000, 1200, 1400, 1600, 1800, 2200, 2600, 3000,
@@ -64,18 +64,18 @@ public class GameController {
 		if (!started) {
 			mainSound.start();
 			startNewGame();
-			link.getGameBot().setFire();
+			mainFrame.getGameView().getGameBot().setFire();
 		}
 		// pause & restart : 이미 게임이 시작된 상태에서 버튼 클릭시
 		else {
 			if (InGame) {
 				mainSound.stop();
 				pauseSignal();
-				link.getGameBot().disFire();
+				mainFrame.getGameView().getGameBot().disFire();
 			} else {
 				mainSound.start();
 				restartSignal();
-				link.getGameBot().setFire();
+				mainFrame.getGameView().getGameBot().setFire();
 			}
 		}
 	}
@@ -103,7 +103,7 @@ public class GameController {
 		game.interrupt();
 
 		// GameMidPanel에 Pause 화면 세팅
-		link.getGameView().setMidPause();
+		mainFrame.getGameView().setMidPause();
 	}
 
 	// startSignal 3 : 재시작
@@ -114,7 +114,7 @@ public class GameController {
 		endTime = startTime + remainTime;
 
 		// GameMid JPanel에 임시저장해놓은 이전 화면 세팅
-		link.getGameView().setMidPre();
+		mainFrame.getGameView().setMidPre();
 
 		// game 재시작(스레드 생성하여 시작)
 		game = new Thread(new gameTimerThread());
@@ -131,9 +131,9 @@ public class GameController {
 		game = new Thread(new gameTimerThread());
 
 		// GameTop 초기화
-		link.getGameTop().setStage(level, score);
+		mainFrame.getGameView().getGameTop().setStage(level, score);
 		// GameMid 초기화(게임화면 세팅)
-		link.getGameView().setMidLevel(newLevel);
+		mainFrame.getGameView().setMidLevel(newLevel);
 
 		// game(스레드) 시작
 		game.start();
@@ -150,7 +150,7 @@ public class GameController {
 		// System.out.println("Stage Score : " + stageScore);
 		score += stageScore;
 		// System.out.println("Total Score : " + score);
-		link.getGameTop().setStage(level, score);
+		mainFrame.getGameView().getGameTop().setStage(level, score);
 
 		// 3-1. 최고레벨 클리어시
 		if (level >= FINAL_LEVEL)
@@ -179,27 +179,27 @@ public class GameController {
 		if (reason == WRONG_ANSWER) {
 			message = "오답";
 			Sound("bgm/GameOver.wav", false);
-			link.getGameView().setMidFail(score);
+			mainFrame.getGameView().setMidFail(score);
 		} else if (reason == TIMES_UP) {
 			message = "시간초과";
 			Sound("bgm/GameOver.wav", false);
-			link.getGameView().setMidFail(score);
+			mainFrame.getGameView().setMidFail(score);
 		} else if (reason == CLEAR_GAME) {
 			message = "게임 클리어";
 			Sound("bgm/GameClear.wav", false);
-			link.getGameView().setMidSuccess(score);
+			mainFrame.getGameView().setMidSuccess(score);
 		} else
 			message = "ERROR : Wrong Value";
 
 		// GameBot 초기화(프로그레스바)
-		link.getGameBot().setTime(0, TIME_LIMIT);
-		link.getGameBot().disFire();
+		mainFrame.getGameView().getGameBot().setTime(0, TIME_LIMIT);
+		mainFrame.getGameView().getGameBot().disFire();
 
 		// MainFrame에 점수 업로드창 띄우기
 		endMessage();
 
 		// MainFrame의 시작버튼 초기화
-		link.getButtonView().setRefreshStartButton();
+		mainFrame.getButtonView().setRefreshStartButton();
 		System.out.println("GameController : 게임종료(" + message + ")");
 	}
 
@@ -207,7 +207,7 @@ public class GameController {
 	private void endMessage() {
 		String endMsg = "점수 : " + score + "\n저장하시겠습니까?";
 
-		if (JOptionPane.showConfirmDialog(link.getMainFrame(), endMsg, "Upload",
+		if (JOptionPane.showConfirmDialog(mainFrame, endMsg, "Upload",
 				JOptionPane.OK_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
 			// 문자열 입력창
 			String nickName = "";
@@ -221,7 +221,7 @@ public class GameController {
 				// 특정값을 입력하고 확인 선택시
 				if (!nickName.equals("") && nickName != null) {
 					// 서버에 기록 전송후 랭크뷰의 메인 테이블 -> 서브 테이블 갱신
-					link.getRankView().addNewUser(nickName, score, System.currentTimeMillis());
+					mainFrame.getRankView().addNewUser(nickName, score, System.currentTimeMillis());
 					break;
 				}
 			}
@@ -238,8 +238,8 @@ public class GameController {
 					Thread.sleep(DURATION);
 					// 남은 시간 계속 전송
 					remainTime = endTime - System.currentTimeMillis();
-					link.getGameTop().setRemainTime(remainTime);
-					link.getGameBot().setTime(remainTime, TIME_LIMIT);
+					mainFrame.getGameView().getGameTop().setRemainTime(remainTime);
+					mainFrame.getGameView().getGameBot().setTime(remainTime, TIME_LIMIT);
 
 					// 시간초과
 					if (remainTime <= 0) {
@@ -267,6 +267,10 @@ public class GameController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public MainFrame getMainFrame(){
+		return mainFrame;
 	}
 
 }

@@ -2,18 +2,16 @@ package view.button;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
 
-import model.Linker;
+import view.MainFrame;
 
 public class ButtonView extends JPanel {
 	// 각 객체 노드 저장
-	private Linker link;
+	private MainFrame mainFrame;
 
 	private Image startImg;
 	private Image pauseImg;
@@ -23,10 +21,9 @@ public class ButtonView extends JPanel {
 
 	boolean inGame;
 
-	public ButtonView(Linker link) {
-		this.link = link;
-		this.link.setButtonView(this);
-
+	public ButtonView(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
+		
 		inGame = false;
 		// ■■■ 스타트 버튼 이미지 처리 : 좀더 깔끔하게 ■■■
 		try {
@@ -80,7 +77,7 @@ public class ButtonView extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (JOptionPane.showConfirmDialog(link.getMainFrame(), "정말 종료하시겠습니까?", "프로그램 종료",
+			if (JOptionPane.showConfirmDialog(mainFrame, "정말 종료하시겠습니까?", "프로그램 종료",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 				System.exit(0);
 			}
@@ -95,12 +92,12 @@ public class ButtonView extends JPanel {
 			// pause 실행 : 게임중(inGame==true)에 버튼을 누를 경우
 			if (!inGame) {
 				inGame = false;
-				link.getGameController().startSignal();
+				mainFrame.getGameController().startSignal();
 			}
 			// start 실행 : 게임을 처음 누를 경우 / 일시정지 상태에서 누를 경우(재시작)
 			else {
 				inGame = true;
-				link.getGameController().startSignal();
+				mainFrame.getGameController().startSignal();
 			}
 		}
 

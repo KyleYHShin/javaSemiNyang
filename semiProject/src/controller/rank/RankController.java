@@ -2,20 +2,25 @@ package controller.rank;
 
 import java.util.*;
 import javax.swing.JOptionPane;
-import model.Linker;
+
+import controller.game.GameController;
+import view.MainFrame;
 import model.User;
 
 public class RankController {
+	
 	private final String ORDER_GET = "get";	// 통신 명령어
+	
+	private MainFrame mainFrame;
+	private GameController gameController;
 	private Client client;	//클라이언트
 	
-	private Linker link;
 	private ArrayList<User> data;	//점수 데이터 저장 변수
 
-	public RankController(Linker link) {
-		this.link = link;
-		this.link.setRankController(this);
-
+	public RankController(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
+		this.gameController = mainFrame.getGameController();
+		
 		client = new Client();
 	}
 
@@ -29,8 +34,8 @@ public class RankController {
 		// 업데이트 후 데이터 수신
 		data = client.getUsers(newUser);
 		if (data == null) {
-			link.getGameController().Sound("bgm/Alarm.wav", false);
-			JOptionPane.showMessageDialog(link.getMainFrame(), "통신오류!!\n데이터를 읽어 올 수 없습니다.");
+			gameController.Sound("bgm/Alarm.wav", false);
+			JOptionPane.showMessageDialog(mainFrame, "통신오류!!\n데이터를 읽어 올 수 없습니다.");
 		}
 		return toObjectArray(sortUsers(selectUsers(checkedBtn, data)));
 	}
@@ -45,7 +50,7 @@ public class RankController {
 				data = temp;
 			}else{
 				String msg = "데이터를 읽어 올 수 없습니다.\n점수 기록기능이 제한됩니다.";
-				JOptionPane.showMessageDialog(link.getMainFrame(), msg, "통신오류", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(mainFrame, msg, "통신오류", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		// 업데이트 클릭 실패 or JRadioButton 클릭시 기존 데이터 반환

@@ -14,27 +14,23 @@ import controller.game.GameController;
 import model.Linker;
 
 public class MainFrame extends JFrame {
-	//각 객체 노드 저장
-	private Linker link;
-	
+	// 객체 목록
+	private GameController gameController;
+	private GameView gameView;
+	private RankView rankView;
+	private ButtonView buttonView;
+
+	// 내부 패널 목록
 	private JPanel gamePanel;
 	private JPanel rankPanel;
 	private JPanel buttonPanel;
 
-	private GameView gameView;
-	private RankView rankView;
-	private ButtonView buttonView;
-	
-	private GameController gameController;
+	public MainFrame(GameController gameController) {
+		this.gameController = gameController;
 
-	public MainFrame() {
-		link = new Linker();
-		link.setMainFrame(this);
-		
-		gameController = new GameController(link);
-		gameView = new GameView(link);
-		buttonView = new ButtonView(link);
-		rankView = new RankView(link);
+		gameView = new GameView(this);
+		buttonView = new ButtonView(this);
+		rankView = new RankView(this);
 	}
 
 	public void setMainFrame() {
@@ -44,11 +40,11 @@ public class MainFrame extends JFrame {
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLayout(null);
 		this.setResizable(false);
-		
+
 		gamePanel = new JPanel();
 		gamePanel.setLayout(null);
 		gamePanel.setBounds(0, 0, 700, 850);
-		gamePanel.add(link.getGameView().getGameTotalPanel());
+		gamePanel.add(gameView.getGameTotalPanel());
 		this.add(gamePanel);
 
 		rankPanel = new JPanel();
@@ -65,8 +61,8 @@ public class MainFrame extends JFrame {
 
 		this.setVisible(true);
 	}
-	
-	public GameController getGameController(){
+
+	public GameController getGameController() {
 		return gameController;
 	}
 
@@ -74,11 +70,11 @@ public class MainFrame extends JFrame {
 		return gameView;
 	}
 
-	public RankView getRankView() {
-		return rankView;
-	}
-
 	public ButtonView getButtonView() {
 		return buttonView;
+	}
+
+	public RankView getRankView() {
+		return rankView;
 	}
 }

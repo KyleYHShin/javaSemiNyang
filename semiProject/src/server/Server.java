@@ -1,4 +1,4 @@
-package controller.rank;
+package server;
 
 import java.io.EOFException;
 import java.io.FileInputStream;
@@ -124,7 +124,7 @@ public class Server {
 			// 데이터 저장 객체 생성(파일 덮어씌우기)
 			try {
 				while (true) {
-					System.out.println("서버 : 자동 저장 기능 실행");
+					// System.out.println("서버 : 자동 저장 기능 실행");
 					// 특정 시간(1분)동안 sleep
 					Thread.sleep(SAVE_TERM);
 					// 데이터 저장 : 아래 선언문 위치(코드 줄번호)에 따라 오류 발생

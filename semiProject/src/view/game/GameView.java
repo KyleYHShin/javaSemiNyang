@@ -1,29 +1,25 @@
 package view.game;
 
 import javax.swing.*;
-
-import model.Linker;
+import view.MainFrame;
 
 public class GameView extends JPanel {
 	// 각 객체 노드 저장
-	private Linker link;
-
-	private JPanel gameTotalPanel;
-	private JPanel gameTopPanel;
-	private JPanel gameMidPanel;
-	private JPanel gameBotPanel;
-
 	private GameTop gameTop;
 	private GameMid gameMid;
 	private GameBot gameBot;
 
-	public GameView(Linker link) {
-		this.link = link;
-		this.link.setGameView(this);
+	private JPanel gameTotalPanel;
+	
+	private JPanel gameTopPanel;
+	private JPanel gameMidPanel;
+	private JPanel gameBotPanel;
 
-		gameTop = new GameTop(this.link);
-		gameMid = new GameMid(this.link);
-		gameBot = new GameBot(this.link);
+	public GameView(MainFrame mainFrame) {
+
+		gameTop = new GameTop();
+		gameMid = new GameMid(mainFrame);
+		gameBot = new GameBot();
 
 		gameTotalPanel = new JPanel();
 		gameTotalPanel.setLayout(null);
@@ -39,33 +35,42 @@ public class GameView extends JPanel {
 	}
 	
 	public void setMidPause() {
-		gameMidPanel = link.getGameMid().getPauseScreen();
+		gameMidPanel = gameMid.getPauseScreen();
 		gameTotalPanel.revalidate();
 		gameTotalPanel.repaint();
 	}
 
 	public void setMidPre() {
-		gameMidPanel = link.getGameMid().getPreScreen();
+		gameMidPanel = gameMid.getPreScreen();
 		gameTotalPanel.revalidate();
 		gameTotalPanel.repaint();
 	}
 
 	public void setMidLevel(int level) {
-		gameMidPanel = link.getGameMid().getGameScreen(level);
+		gameMidPanel = gameMid.getGameScreen(level);
 		gameTotalPanel.revalidate();
 		gameTotalPanel.repaint();
 	}
 	public void setMidSuccess(int score){
-		gameMidPanel = link.getGameMid().getSuccessScreen(score);
+		gameMidPanel = gameMid.getSuccessScreen(score);
 		gameTotalPanel.revalidate();
 		gameTotalPanel.repaint();
 	}
 	public void setMidFail(int score){
-		gameMidPanel = link.getGameMid().getFailScreen(score);
+		gameMidPanel = gameMid.getFailScreen(score);
 		gameTotalPanel.revalidate();
 		gameTotalPanel.repaint();
 	}
+	
+	public GameTop getGameTop() {
+		return gameTop;
+	}
 
+	public GameBot getGameBot() {
+		return gameBot;
+	}
+
+	// 나중에 제거
 	public JPanel getGameTotalPanel() {
 		return gameTotalPanel;
 	}

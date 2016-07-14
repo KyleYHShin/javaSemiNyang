@@ -9,11 +9,11 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
 import controller.rank.RankController;
-import model.Linker;
+import view.MainFrame;
+
 
 public class RankView extends JPanel {
-	// 각 객체 노드 저장
-	private Linker link;
+	
 	private RankController rankController;
 
 	private JPanel firstPane, secondPane, thirdPane, fourthPane;
@@ -33,10 +33,8 @@ public class RankView extends JPanel {
 
 	private JButton btnNickName, btnUpdate;
 
-	public RankView(Linker link) {
-		this.link = link;
-		this.link.setRankView(this);
-		rankController = new RankController(link);
+	public RankView(MainFrame mainFrame) {
+		rankController = new RankController(mainFrame);
 	}
 
 	public JPanel makeRankView() {

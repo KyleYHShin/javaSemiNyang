@@ -4,23 +4,16 @@ import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import model.Linker;
-
 public class GameTop extends JPanel {
-	// 각 객체 노드 저장
-	private Linker link;
 
 	private JPanel topView;
 	private JLabel stageField;
 	private JLabel timeField;
 	private JLabel scoreField;
 
-	public GameTop(Linker link) {
-		this.link = link;
-		this.link.setGameTop(this);
+	public GameTop() {
 	}
 
 	public JPanel setDefaultScreen() {

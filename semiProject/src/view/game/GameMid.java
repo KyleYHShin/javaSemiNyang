@@ -1,9 +1,13 @@
 package view.game;
 
 import javax.swing.*;
+
+import controller.game.GameController;
+import view.MainFrame;
+
 import java.awt.*;
 import java.awt.event.*;
-import model.Linker;
+
 import java.util.*;
 
 public class GameMid extends JPanel {
@@ -12,8 +16,7 @@ public class GameMid extends JPanel {
 	private final ImageIcon GAME_OVER = new ImageIcon("image/Game_Over.jpg");
 	private final ImageIcon GAME_PAUSE = new ImageIcon("image/Game_Pause.jpg");
 
-	// 각 객체 노드 저장
-	private Linker link;
+	private GameController gameController;
 
 	private JPanel midPanel;
 	private JPanel tempMidPanel;
@@ -24,9 +27,8 @@ public class GameMid extends JPanel {
 
 	private final int WRONG_ANSWER = 0; // 오답
 
-	public GameMid(Linker link) {
-		this.link = link;
-		this.link.setGameMid(this);
+	public GameMid(MainFrame mainFrame) {
+		gameController = mainFrame.getGameController();
 
 		midPanel = new JPanel();
 		midPanel.setLayout(null);
@@ -242,8 +244,8 @@ public class GameMid extends JPanel {
 	private class RightButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			link.getGameController().Sound("bgm/Click.wav", false);
-			link.getGameController().clearLevel(e.getWhen());
+			gameController.Sound("bgm/Click.wav", false);
+			gameController.clearLevel(e.getWhen());
 		}
 
 	}
@@ -251,8 +253,8 @@ public class GameMid extends JPanel {
 	private class WrongButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			link.getGameController().Sound("bgm/Click.wav", false);
-			link.getGameController().endGame(WRONG_ANSWER);
+			gameController.Sound("bgm/Click.wav", false);
+			gameController.endGame(WRONG_ANSWER);
 		}
 	}
 }

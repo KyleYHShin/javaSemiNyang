@@ -7,8 +7,7 @@ import javax.swing.*;
 import model.Linker;
 
 public class GameBot extends JProgressBar {
-	// 각 객체 노드 저장
-	private Linker link;
+	
 	private final int MAX_VALUE = 1000;
 
 	private JPanel botView;
@@ -19,10 +18,7 @@ public class GameBot extends JProgressBar {
 	private JLabel imgBox;
 	private JPanel fireView;
 
-	public GameBot(Linker link) {
-		this.link = link;
-		this.link.setGameBot(this);
-
+	public GameBot() {
 		// Image 처리
 		img = new ImageIcon(FIRE);
 		imgBox = new JLabel();
