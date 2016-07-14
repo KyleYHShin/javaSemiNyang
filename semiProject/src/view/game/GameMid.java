@@ -199,20 +199,19 @@ public class GameMid extends JPanel {
 
 		// 블럭 색상 선택
 		final int MAX_HALF = 128;
-		int difColor = 10 + 100 / level;
+		int difColor = 5 + 110 / level;
 		int red, green, blue;
 		Color wrongColor, rightColor;
 
 		Random r = new Random();
+
+		red = r.nextInt(MAX_HALF - difColor) + MAX_HALF;
+		green = r.nextInt(MAX_HALF - difColor) + MAX_HALF;
+		blue = r.nextInt(MAX_HALF - difColor) + MAX_HALF;
+		
 		if (r.nextBoolean()) {
-			red = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
-			green = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
-			blue = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
 			wrongColor = new Color(red + difColor, green + difColor, blue + difColor);
 		} else {
-			red = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
-			green = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
-			blue = r.nextInt(MAX_HALF - difColor) + MAX_HALF / 2;
 			wrongColor = new Color(red - difColor, green - difColor, blue - difColor);
 		}
 		rightColor = new Color(red, green, blue);
