@@ -12,7 +12,8 @@ import model.User;
 public class Client {
 	// 서버 포트번호와 서버의 IP주소 설정
 	private final static int PORT = 7557;
-	private final static String SERVER_IP = "192.168.30.7";
+	private final static String SERVER_IP = "127.0.0.1";
+	// private final static String SERVER_IP = "192.168.30.7";
 	Socket server;
 	ObjectInputStream ois;
 	ObjectOutputStream oos;
@@ -58,6 +59,6 @@ public class Client {
 			users = new ArrayList<User>();
 			users.addAll((ArrayList<User>) getObject);
 		}
-		return /*(ArrayList<User>) */users;
+		return /* (ArrayList<User>) */users;
 	}
 }
