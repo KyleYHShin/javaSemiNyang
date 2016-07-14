@@ -17,7 +17,7 @@ import model.User;
 public class Server {
 	private final String CHECK_GET = "get";
 	private final String FILE_PATH = "userData.dat";
-	private final int PORT = 2323;
+	private final int PORT = 7557;
 	private final int SAVE_TERM = 60000;
 
 	private ServerSocket server;
