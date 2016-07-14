@@ -165,12 +165,6 @@ public class GameMid extends JPanel {
 		};
 		middleSide.setBounds(50, 150, 600, 600);
 
-		String msg = "Game Clear!!\n점수는 " + score + " 점!!\n수고했다냥 :3";
-		JLabel msgLabel = new JLabel(msg, JLabel.CENTER);
-		msgLabel.setBounds(314, 314, 418, 175);
-		msgLabel.setFont(new Font("Arial", Font.BOLD, 40));
-		msgLabel.setOpaque(false);
-
 		// 재설정
 		midPanel.removeAll();
 		midPanel.add(leftSide);
