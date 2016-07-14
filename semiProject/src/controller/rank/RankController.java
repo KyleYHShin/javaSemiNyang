@@ -62,11 +62,11 @@ public class RankController {
 		int timeTerm = 0;
 
 		// 넘어오는 버튼이름에 따라 시간텀 조정
-		if (checkedBtn.equals("월별"))
+		if (checkedBtn.equals("월간"))
 			timeTerm = 30 * 24 * 60 * 60;
-		else if (checkedBtn.equals("주별"))
+		else if (checkedBtn.equals("주간"))
 			timeTerm = 7 * 24 * 60 * 60;
-		else if (checkedBtn.equals("일별"))
+		else if (checkedBtn.equals("일간"))
 			timeTerm = 24 * 60 * 60;
 
 		// 현재시간
@@ -108,5 +108,13 @@ public class RankController {
 			}
 		}
 		return users;
+	}
+	private class DescRank implements Comparator{
+		public DescRank(){}
+		
+		@Override
+		public int compare(Object ob1, Object ob2) {		
+			return ((User)ob2).getScore() - ((User)ob1).getScore();
+		}
 	}
 }

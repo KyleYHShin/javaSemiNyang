@@ -51,9 +51,9 @@ public class RankView extends JPanel {
 		firstPane.setBounds(10, 10, 275, 30);
 		firstPane.setLayout(new FlowLayout());
 		// 객체 생성
-		jrBtnMonthly = new JRadioButton("월별", true);
-		jrBtnWeekly = new JRadioButton("주별");
-		jrBtnDaily = new JRadioButton("일별");
+		jrBtnMonthly = new JRadioButton("월간", true);
+		jrBtnWeekly = new JRadioButton("주간");
+		jrBtnDaily = new JRadioButton("일간");
 		// JRadioButton 그룹화
 		groupJRadioBtn = new ButtonGroup();
 		groupJRadioBtn.add(jrBtnMonthly);

@@ -4,8 +4,6 @@ import java.awt.FlowLayout;
 
 import javax.swing.*;
 
-import model.Linker;
-
 public class GameBot extends JProgressBar {
 	
 	private final int MAX_VALUE = 1000;

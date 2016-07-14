@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,7 +10,6 @@ import view.rank.RankView;
 import view.button.ButtonView;
 
 import controller.game.GameController;
-import model.Linker;
 
 public class MainFrame extends JFrame {
 	// °´Ã¼ ¸ñ·Ï
